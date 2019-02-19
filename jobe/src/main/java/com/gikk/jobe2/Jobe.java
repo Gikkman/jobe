@@ -112,7 +112,7 @@ public class Jobe {
         }
     }
 
-    Jobe() {}
+    public Jobe() {}
 
     public void consume(String s) {
         if( NODE_LEN <= OVERLAP ) return;
