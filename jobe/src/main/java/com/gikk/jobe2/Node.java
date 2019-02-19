@@ -32,15 +32,15 @@ import java.util.stream.Collectors;
  * @author Gikkman
  */
 public class Node {
-    static final Node EMPTY = new Node(Collections.EMPTY_LIST, 0);
+    static final Node EMPTY = new Node(Collections.EMPTY_LIST, -1);
 
-    private final List<String> tokens;
+    private final List<Token> tokens;
     private final int id;
     private final int hashCache;
 
     private int weight = 0;
 
-    Node(List<String> tokens, int id) {
+    Node(List<Token> tokens, int id) {
         this.tokens = tokens;
         this.id = id;
         this.hashCache = this.tokens.hashCode();
@@ -54,7 +54,7 @@ public class Node {
         return tokens.get(tokens.size()-1).equals(Jobe.END_OF_CHAIN);
     }
 
-    List<String> getTokens(){
+    List<Token> getTokens(){
         return this.tokens;
     }
 
@@ -66,6 +66,10 @@ public class Node {
         this.weight++;
     }
 
+    int getWeight() {
+        return this.weight;
+    }
+
     public void writeToken(StringBuilder b, int index) {
         if(index >= tokens.size()) return;
         b.append(" ").append(tokens.get(index));
@@ -73,7 +77,7 @@ public class Node {
 
     @Override
     public String toString() {
-        return id + ":" + tokens.stream().collect( Collectors.joining("-","[","]") );
+        return id + ":" + tokens.stream().map(Token::getString).collect( Collectors.joining("-","[","]") );
     }
 
     @Override

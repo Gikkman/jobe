@@ -24,39 +24,42 @@
 package com.gikk.jobe2;
 
 import com.gikk.RandomAccessSet;
+import com.sun.javafx.scene.traversal.TopMostTraversalEngine;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- *
- * @author Gikkman
- */
 public class Jobe {
-    static final String START_OF_CHAIN = "\\s";
-    static final String END_OF_CHAIN = "\\e";
+    static final Token START_OF_CHAIN = new Token("\\s");
+    static final Token END_OF_CHAIN = new Token("\\e");
     private static final int NODE_LEN = 3;
     private static final int OVERLAP = 2;
 
-    private final Map<String, RandomAccessSet<Node>> TOKEN_TO_NODES = new HashMap<>();
+    private final Map<String, Token> TOKENS = new HashMap<>();
+    private final Map<Token, RandomAccessSet<Node>> TOKEN_TO_NODES = new HashMap<>();
 
     private final Map<NodePrototype, Node> NODE_MAP = new HashMap<>();
 
     private final Map<Node, RandomAccessSet<Edge>> LEFTWARDS = new HashMap<>();
     private final Map<Node, RandomAccessSet<Edge>> RIGHTWARDS = new HashMap<>();
 
-    public static void main(String ... args) throws UnsupportedEncodingException {
+    public static void main(String ... args) {
         Set<String> results = new HashSet<>();
 
         Jobe jobe = new Jobe();
+        jobe.consume("this is gikkman test");
         jobe.consume("this is a test");
         jobe.consume("this is another test");
         jobe.consume("this is another test yo");
@@ -66,6 +69,7 @@ public class Jobe {
         for(int i = 0; i < 10000; i++) {
             try{
                 results.add(jobe.produce("test"));
+                results.add(jobe.produce("gikkman"));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -76,14 +80,15 @@ public class Jobe {
 
         System.out.println("\nNodes:");
         jobe.NODE_MAP.values().stream()
-            .sorted((Node o1, Node o2) -> o1.getNodeID() - o2.getNodeID())
+            .sorted(Comparator.comparingInt(Node::getNodeID))
             .forEach(n -> System.out.println(n.toString()));
 
         System.out.println("\nTokens:");
-        for(Map.Entry<String, RandomAccessSet<Node>> e : jobe.TOKEN_TO_NODES.entrySet()) {
+        for(Map.Entry<Token, RandomAccessSet<Node>> e : jobe.TOKEN_TO_NODES.entrySet()) {
             String val = e.getValue().stream().map(Node::toString).collect(Collectors.joining(","));
-            System.out.println("Key: " + e.getKey() + " Val: " + val);
-        }
+            String key = String.format("Key: %-8s ", e.getKey());
+            String value = "Val: " + val;
+            System.out.println(key + value);        }
 
         System.out.println("\nEdges LEFT:");
         for(Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.LEFTWARDS.entrySet()) {
@@ -92,7 +97,9 @@ public class Jobe {
                     e1.getLeftNode().getNodeID() - e2.getLeftNode().getNodeID()
                 ).map(Edge::toString)
                 .collect(Collectors.joining(","));
-            System.out.println("Key: " + e.getKey() +" Val: " + val);
+            String key = String.format("Key: %-4s ", e.getKey());
+            String value = "Val: " + val;
+            System.out.println(key + value);
         }
 
         System.out.println("\nEdges RIGHT:");
@@ -102,23 +109,26 @@ public class Jobe {
                     e1.getRightNode().getNodeID() - e2.getRightNode().getNodeID()
                 ).map(Edge::toString)
                 .collect(Collectors.joining(","));
-            System.out.println("Key: " + e.getKey() +" Val: " + val);
+            String key = String.format("Key: %-4s ", e.getKey());
+            String value = "Val: " + val;
+            System.out.println(key + value);
         }
     }
 
-    Jobe() {
-    }
+    Jobe() {}
 
-    public void consume(String s) throws UnsupportedEncodingException {
+    public void consume(String s) {
         if( NODE_LEN <= OVERLAP ) return;
         if( NODE_LEN < 1 ) return;
 
-        // Split incomming message into tokens
-        String[] tokens = s.split("\\s+");
-        int tokensLenght = tokens.length;
+        // Split incoming message into tokens
+        String[] split = s.split("\\s+");
+        int tokensLenght = split.length;
+        Token[] tokens = new Token[tokensLenght];
+        for(int i = 0; i < tokensLenght; i++) tokens[i] = registerToken(split[i]);
 
         // Array for representing node segments
-        String[] nextTokens = new String[NODE_LEN];
+        Token[] nextTokens = new Token[NODE_LEN];
         nextTokens[0] = START_OF_CHAIN;
 
         /** The idea is to construct several token series, where each series
@@ -142,7 +152,7 @@ public class Jobe {
         int nextTokenPos;
         List<Node> nodes = new ArrayList<>();
 
-        // Special case for chains of lenght 1
+        // Special case for chains of length 1
         if(NODE_LEN == 1) {
             nextTokenPos = 0;
             NodePrototype proto = new NodePrototype(nextTokens, 1);
@@ -194,18 +204,30 @@ public class Jobe {
         }
     }
 
+    private synchronized Token registerToken(String prototype) {
+        Token token = TOKENS.computeIfAbsent(
+            prototype,
+            (proto) -> {
+                Token t = new Token(proto);
+                return t;
+            }
+        );
+        token.addPoint();
+        return token;
+    }
+
     private synchronized Node registerNode(NodePrototype prototype) {
         Node node = NODE_MAP.computeIfAbsent(
             prototype,
             (proto) -> {
                 Node n = new Node(proto.getTokens(), NODE_MAP.size());
-                for(String token : proto.getTokens()) {
+                for(Token token : proto.getTokens()) {
                     TOKEN_TO_NODES.computeIfAbsent(
                             token,
-                            (tt) -> new RandomAccessSet<>())
+                            (tt) -> new RandomAccessSet<>()
+                        )
                         .add(n);
                 }
-
                 return n;
             }
         );
@@ -213,9 +235,11 @@ public class Jobe {
         return node;
     }
 
-    private String produce(String i) throws UnsupportedEncodingException {
+    private String produce(String i) {
         Random rng = new Random();
-        Node originNode = TOKEN_TO_NODES.get(i).getRandom(rng);
+        Token token = TOKENS.get(i);
+        if(token == null) token = getRandomToken(rng);
+        Node originNode = TOKEN_TO_NODES.get(token).getRandom(rng);
         if(originNode == null) return null;
 
         Deque<Node> nodes = new ArrayDeque<>();
@@ -236,7 +260,6 @@ public class Jobe {
         }
 
         // Print the NODES
-//        PrintStream printStream = new PrintStream(System.out, true, StandardCharsets.UTF_8.name());
         StringBuilder builder = new StringBuilder();
         int j = 0;
         for(Node node : nodes) {
@@ -245,7 +268,17 @@ public class Jobe {
             }
             j = OVERLAP;
         }
-//        printStream.close();
-        return builder.toString();
+        return builder.toString().trim();
+    }
+
+    private Token getRandomToken(Random rng)
+    {
+        int size = TOKENS.size();
+        int index = rng.nextInt(size);
+        Iterator<Token> itr = TOKENS.values().iterator();
+        Token out = itr.next();
+        for(int i = 0; i < index; i++)
+            out = itr.next();
+        return out;
     }
 }

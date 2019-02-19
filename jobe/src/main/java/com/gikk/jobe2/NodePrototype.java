@@ -31,15 +31,15 @@ import java.util.List;
  * @author Gikkman
  */
 public class NodePrototype {
-    private final List<String> tokens = new ArrayList<>();
+    private final List<Token> tokens = new ArrayList<>();
 
-    public NodePrototype(String[] tokens, int lengt) {
+    public NodePrototype(Token[] tokens, int lengt) {
         for(int i = 0; i < lengt; i++) {
             this.tokens.add(tokens[i]);
         }
     }
 
-    public List<String> getTokens() {
+    public List<Token> getTokens() {
         return tokens;
     }
 
@@ -48,7 +48,6 @@ public class NodePrototype {
         if(!(obj instanceof NodePrototype)) {
             return false;
         }
-
         NodePrototype other = (NodePrototype) obj;
         return this.tokens.equals(other.tokens);
     }
@@ -59,6 +58,4 @@ public class NodePrototype {
         hash = 23 * hash + this.tokens.hashCode();
         return hash;
     }
-
-
 }

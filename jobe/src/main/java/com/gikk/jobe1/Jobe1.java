@@ -39,6 +39,7 @@ import java.util.Set;
  *
  * @author Gikkman
  */
+@SuppressWarnings("unused")
 public class Jobe1 {
     static final String START_OF_CHAIN = " ";
     static final String END_OF_CHAIN = " ";

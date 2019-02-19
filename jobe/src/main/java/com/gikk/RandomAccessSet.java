@@ -40,8 +40,8 @@ import java.util.Random;
  * @author Gikkman
  */
 public class RandomAccessSet<E> extends AbstractSet<E>{
-    List<E> data = new ArrayList<>();
-    Map<E, Integer> idx = new HashMap<>();
+    private final List<E> data = new ArrayList<>();
+    private final Map<E, Integer> idx = new HashMap<>();
 
     public RandomAccessSet() {}
 
