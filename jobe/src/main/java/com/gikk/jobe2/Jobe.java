@@ -24,12 +24,8 @@
 package com.gikk.jobe2;
 
 import com.gikk.RandomAccessSet;
-import com.sun.javafx.scene.traversal.TopMostTraversalEngine;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -59,7 +55,7 @@ public class Jobe {
         Set<String> results = new HashSet<>();
 
         Jobe jobe = new Jobe();
-        jobe.consume("this is gikkman test");
+        jobe.consume("this is gikk test");
         jobe.consume("this is a test");
         jobe.consume("this is another test");
         jobe.consume("this is another test yo");
@@ -88,7 +84,8 @@ public class Jobe {
             String val = e.getValue().stream().map(Node::toString).collect(Collectors.joining(","));
             String key = String.format("Key: %-8s ", e.getKey());
             String value = "Val: " + val;
-            System.out.println(key + value);        }
+            System.out.println(key + value);        
+        }
 
         System.out.println("\nEdges LEFT:");
         for(Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.LEFTWARDS.entrySet()) {

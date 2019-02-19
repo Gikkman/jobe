@@ -66,7 +66,7 @@ public class Node {
 
     @Override
     public String toString() {
-        return tokens.stream().collect( Collectors.joining("|") );
+        return id + ":" + tokens.stream().collect( Collectors.joining("-","[","]") );
     }
 
     @Override

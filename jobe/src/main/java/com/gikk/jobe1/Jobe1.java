@@ -30,10 +30,12 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -68,13 +70,50 @@ public class Jobe1 {
 
         for(int i = 0; i < 10000; i++) {
             try{
+                results.add(jobe.produce("nones"));
                 results.add(jobe.produce("test"));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
 
+        System.out.println("\nOutput:");
         results.stream().forEach(System.out::println);
+
+        System.out.println("\nNodes:");
+        jobe.TOKEN_TO_NODES.values().stream()
+            .flatMap(set -> set.stream())
+            .distinct()
+            .sorted( (Node o1, Node o2) -> o1.getNodeID() - o2.getNodeID())
+            .forEach(n -> System.out.println(n.toString()));
+
+        System.out.println("\nTokens:");
+        for(Map.Entry<String, RandomAccessSet<Node>> e : jobe.TOKEN_TO_NODES.entrySet()) {
+            String val = e.getValue().stream().map(Node::toString).collect(Collectors.joining(","));
+            String key = String.format("Key: %-8s ", e.getKey());
+            String value = "Val: " + val;
+            System.out.println(key + value);   
+        }
+
+        System.out.println("\nEdges LEFT:");
+        for(Map.Entry<Edge, RandomAccessSet<Edge>> e : jobe.LEFTWARDS.entrySet()) {
+           String val = e.getValue().stream()
+                .sorted( (Edge e1, Edge e2) ->
+                    e1.getLeftNodeID() - e2.getLeftNodeID()
+                ).map(Edge::toString)
+                .collect(Collectors.joining(","));
+            System.out.println("Key: " + e.getKey() +" Val: " + val);
+        }
+
+        System.out.println("\nEdges RIGHT:");
+        for(Map.Entry<Edge, RandomAccessSet<Edge>> e : jobe.RIGHTWARDS.entrySet()) {
+            String val = e.getValue().stream()
+                .sorted( (Edge e1, Edge e2) ->
+                    e1.getRightNodeID() - e2.getRightNodeID()
+                ).map(Edge::toString)
+                .collect(Collectors.joining(","));
+            System.out.println("Key: " + e.getKey() +" Val: " + val);
+        }
     }
 
     public synchronized void consume(String s) {
@@ -206,7 +245,11 @@ public class Jobe1 {
 
     public String produce(String i) {
         Random rng = new Random();
-        Node n = TOKEN_TO_NODES.get(i).getRandom(rng);
+        
+        RandomAccessSet<Node> set = TOKEN_TO_NODES.get(i);
+        if(set == null) set = getRandomSet(rng);
+        
+        Node n = set.getRandom(rng);
         if(n == null) return "";
 
         Edge e = NODEID_TO_EDGES.get(n.getNodeID()).getRandom(rng);
@@ -243,5 +286,14 @@ public class Jobe1 {
         }
 //        printStream.close();
         return builder.toString();
+    }
+
+    private RandomAccessSet<Node> getRandomSet(Random rng) {
+        int max = TOKEN_TO_NODES.size();
+        int key = rng.nextInt(max);
+        int i = 0;
+        Iterator<RandomAccessSet<Node>> itr = TOKEN_TO_NODES.values().iterator();
+        while(++i < key) itr.next();
+        return itr.next();
     }
 }
