@@ -24,6 +24,7 @@
 package com.gikk.jobe2;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -43,12 +44,12 @@ class JobeImpl implements Jobe {
     }
 
     @Override
-    public void consume(String s) {
+    public void consume(String input) {
         if (nodeLength <= nodeOverlap)
             return;
         if (nodeLength < 1)
             return;
-        String[] split = tokenizer.split(s);
+        String[] split = tokenizer.split(input);
         Token[] tokens = brain.registerTokens(split);
 
         // Array for representing node segments
@@ -64,8 +65,8 @@ class JobeImpl implements Jobe {
          * left gives us just "hungry _ _", which conveniently is one token of overlap.
          *
          * As an example, the sentence "I am hungry", with a LINK_LEN of 3 and overlap of 1, should produce the
-         * following series: "\\s I am" "am very hungry" "hungry \\e \\e" As seen, we fill out the final series with
-         * END_OF_CHAIN tokens.
+         * following series: "\\s I am" "am very hungry" "hungry \\e" As seen, the last node might be shorter than the
+         * rest.
          *
          */
         int tokensIndex = 0;
@@ -119,13 +120,14 @@ class JobeImpl implements Jobe {
     }
 
     @Override
-    public String produce(String i) {
+    public String produce(String input) {
         Random rng = new Random();
-        Token token = brain.getToken(i);
-        if (token == null)
-            token = brain.getRandomToken(rng);
 
-        Node originNode = brain.getRandomNodeFromToken(token, rng);
+        String[] split = this.tokenizer.split(input);
+        Token[] tokens = brain.getTokens(split);
+        Token originToken = getOriginToken(tokens, rng);
+
+        Node originNode = brain.getRandomNodeFromToken(originToken, rng);
         if (originNode == null)
             return null;
 
@@ -150,5 +152,22 @@ class JobeImpl implements Jobe {
     public String consumeThenProduce(String input) {
         consume(input);
         return produce(input);
+    }
+
+    public Token getOriginToken(Token[] tokens, Random rng) {
+        /*
+         * The token[] might contain null elements
+         */
+        int currentLowestWeight = -1;
+        Token currentWinningToken = null;
+        for (Token token : tokens) {
+            if (token != null && token.getWeight() > currentLowestWeight) {
+                currentWinningToken = token;
+            }
+        }
+        if (currentWinningToken == null) {
+            currentWinningToken = brain.getRandomToken(rng);
+        }
+        return currentWinningToken;
     }
 }

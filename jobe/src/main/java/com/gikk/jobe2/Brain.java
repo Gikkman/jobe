@@ -78,8 +78,15 @@ class Brain {
         return rightwards.get(node).getRandom(rng).getRightNode();
     }
 
-    Token getToken(String string) {
-        return stringTokenMap.get(string);
+    Token[] getTokens(String[] split) {
+        Token[] tokens = new Token[split.length];
+        int i = 0;
+        for (String s : split) {
+            Token t = stringTokenMap.get(s);
+            if (t != null)
+                tokens[i++] = t;
+        }
+        return tokens;
     }
 
     Token getRandomToken(Random rng) {
@@ -92,7 +99,7 @@ class Brain {
         return out;
     }
 
-    public Node getRandomNodeFromToken(Token token, Random rng) {
+    Node getRandomNodeFromToken(Token token, Random rng) {
         return tokenNodeMap.get(token).getRandom(rng);
     }
 }

@@ -38,7 +38,7 @@ class Token {
         this.points++;
     }
 
-    int getPoints() {
+    int getWeight() {
         return this.points;
     }
 
