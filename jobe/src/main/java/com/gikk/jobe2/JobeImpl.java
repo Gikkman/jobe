@@ -23,44 +23,36 @@
  */
 package com.gikk.jobe2;
 
-import com.gikk.RandomAccessSet;
-
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import javafx.beans.binding.NumberBinding;
-
-public class Jobe {
+class JobeImpl implements Jobe {
     static final Token START_OF_CHAIN = new Token("\\s");
     static final Token END_OF_CHAIN = new Token("\\e");
 
     private final StringSplitter tokenizer = StringSplitter.getDefault();
-    private final int NODE_LEN;
-    private final int OVERLAP;
+    private final int nodeLength;
+    private final int nodeOverlap;
 
     final Brain brain = new Brain();
 
-    public Jobe(int nodeLength, int overlap) {
-        this.NODE_LEN = nodeLength;
-        this.OVERLAP = overlap;
+    public JobeImpl(int nodeLength, int nodeOverlap) {
+        this.nodeLength = nodeLength;
+        this.nodeOverlap = nodeOverlap;
     }
 
+    @Override
     public void consume(String s) {
-        if (NODE_LEN <= OVERLAP)
+        if (nodeLength <= nodeOverlap)
             return;
-        if (NODE_LEN < 1)
+        if (nodeLength < 1)
             return;
         String[] split = tokenizer.split(s);
         Token[] tokens = brain.registerTokens(split);
 
         // Array for representing node segments
-        Token[] nextTokens = new Token[NODE_LEN];
+        Token[] nextTokens = new Token[nodeLength];
         nextTokens[0] = START_OF_CHAIN;
 
         /*
@@ -68,8 +60,8 @@ public class Jobe {
          * number of steps to the left.
          *
          * The number of tokens in each segment is managed by LINK_LEN and the number of steps we shift left is LINK_LEN
-         * - OVERLAP. Say we have a LINK_LEN of 3, and an OVERLAP of 1, then shifting "I am hungry" two steps left gives
-         * us just "hungry _ _", which conveniently is one token of overlap.
+         * - nodeOverlap. Say we have a LINK_LEN of 3, and an nodeOverlap of 1, then shifting "I am hungry" two steps
+         * left gives us just "hungry _ _", which conveniently is one token of overlap.
          *
          * As an example, the sentence "I am hungry", with a LINK_LEN of 3 and overlap of 1, should produce the
          * following series: "\\s I am" "am very hungry" "hungry \\e \\e" As seen, we fill out the final series with
@@ -81,7 +73,7 @@ public class Jobe {
         List<Node> nodes = new ArrayList<>();
 
         // Special case for chains of length 1
-        if (NODE_LEN == 1) {
+        if (nodeLength == 1) {
             nextTokenPos = 0;
             NodePrototype proto = new NodePrototype(nextTokens, 1);
             Node node = brain.registerNode(proto);
@@ -92,15 +84,15 @@ public class Jobe {
 
         while (tokensIndex < tokens.length) {
             nextTokens[nextTokenPos++] = tokens[tokensIndex++];
-            if (nextTokenPos == NODE_LEN) {
+            if (nextTokenPos == nodeLength) {
                 // Create a node and register it for a unique ID
                 NodePrototype proto = new NodePrototype(nextTokens, nextTokenPos);
                 Node node = brain.registerNode(proto);
                 nodes.add(node);
 
-                // Shift array left LINK_LEN-OVERLAP steps
-                System.arraycopy(nextTokens, NODE_LEN - OVERLAP, nextTokens, 0, OVERLAP);
-                nextTokenPos = OVERLAP;
+                // Shift array left LINK_LEN-nodeOverlap steps
+                System.arraycopy(nextTokens, nodeLength - nodeOverlap, nextTokens, 0, nodeOverlap);
+                nextTokenPos = nodeOverlap;
             }
         }
 
@@ -126,6 +118,7 @@ public class Jobe {
         }
     }
 
+    @Override
     public String produce(String i) {
         Random rng = new Random();
         Token token = brain.getToken(i);
@@ -136,7 +129,7 @@ public class Jobe {
         if (originNode == null)
             return null;
 
-        Chain chain = new Chain(originNode, OVERLAP);
+        Chain chain = new Chain(originNode, nodeOverlap);
 
         Node left = originNode;
         while (!left.isLeftmost()) {
@@ -151,5 +144,11 @@ public class Jobe {
         }
 
         return chain.toString();
+    }
+
+    @Override
+    public String consumeThenProduce(String input) {
+        consume(input);
+        return produce(input);
     }
 }
