@@ -26,20 +26,16 @@ package com.gikk.jobe2;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Gikkman
- */
-public class NodePrototype {
+class NodePrototype {
     private final List<Token> tokens = new ArrayList<>();
 
-    public NodePrototype(Token[] tokens, int lengt) {
-        for (int i = 0; i < lengt; i++) {
+    NodePrototype(Token[] tokens, int length) {
+        for (int i = 0; i < length; i++) {
             this.tokens.add(tokens[i]);
         }
     }
 
-    public List<Token> getTokens() {
+    List<Token> getTokens() {
         return tokens;
     }
 

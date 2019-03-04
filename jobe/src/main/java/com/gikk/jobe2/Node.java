@@ -27,10 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- *
- * @author Gikkman
- */
 public class Node implements Comparable<Node> {
     static final Node EMPTY = new Node(new ArrayList<>(), -1);
 

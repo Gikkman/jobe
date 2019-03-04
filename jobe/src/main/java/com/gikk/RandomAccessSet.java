@@ -36,7 +36,6 @@ import java.util.Random;
 
 /**
  * Thanks to fandrew: https://stackoverflow.com/a/5669034/1943559
- *
  */
 public class RandomAccessSet<E> extends AbstractSet<E> {
     private final List<E> data = new ArrayList<>();

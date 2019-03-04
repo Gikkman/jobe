@@ -38,7 +38,7 @@ class JobeImpl implements Jobe {
 
     final Brain brain = new Brain();
 
-    public JobeImpl(int nodeLength, int nodeOverlap) {
+    JobeImpl(int nodeLength, int nodeOverlap) {
         this.nodeLength = nodeLength;
         this.nodeOverlap = nodeOverlap;
     }

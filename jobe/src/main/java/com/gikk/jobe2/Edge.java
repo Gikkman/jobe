@@ -25,15 +25,11 @@ package com.gikk.jobe2;
 
 import java.util.Objects;
 
-/**
- *
- * @author Gikkman
- */
 class Edge {
     private final Node leftNode;
     private final Node rightNode;
 
-    public Edge(Node left, Node right) {
+    Edge(Node left, Node right) {
         this.leftNode = left;
         this.rightNode = right;
     }

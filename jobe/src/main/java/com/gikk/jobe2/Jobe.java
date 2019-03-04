@@ -29,4 +29,8 @@ public interface Jobe {
     String produce(String input);
 
     String consumeThenProduce(String input);
+
+    static Jobe getDefault() {
+        return new JobeImpl(3, 2);
+    }
 }

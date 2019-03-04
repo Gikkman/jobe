@@ -39,7 +39,7 @@ class Brain {
     final Map<Node, RandomAccessSet<Edge>> leftwards = new HashMap<>();
     final Map<Node, RandomAccessSet<Edge>> rightwards = new HashMap<>();
 
-    synchronized Token[] registerTokens(String[] prototypes) {
+    synchronized Token[] registerTokens(String... prototypes) {
         Token[] tokens = new Token[prototypes.length];
         for (int i = 0; i < prototypes.length; i++) {
             String prototype = prototypes[i];
@@ -48,6 +48,30 @@ class Brain {
             tokens[i] = token;
         }
         return tokens;
+    }
+
+    Token[] getTokens(String... split) {
+        Token[] tokens = new Token[split.length];
+        int i = 0;
+        for (String s : split) {
+            Token t = stringTokenMap.get(s);
+            if (t != null)
+                tokens[i++] = t;
+        }
+        return tokens;
+    }
+
+    Token getRandomToken(Random rng) {
+        int size = stringTokenMap.size();
+        if (size == 0)
+            return null;
+
+        int index = rng.nextInt(size);
+        Iterator<Token> itr = stringTokenMap.values().iterator();
+        Token out = itr.next();
+        for (int i = 0; i < index; i++)
+            out = itr.next();
+        return out;
     }
 
     synchronized Node registerNode(NodePrototype prototype) {
@@ -76,27 +100,6 @@ class Brain {
 
     Node getNodeRightOf(Node node, Random rng) {
         return rightwards.get(node).getRandom(rng).getRightNode();
-    }
-
-    Token[] getTokens(String[] split) {
-        Token[] tokens = new Token[split.length];
-        int i = 0;
-        for (String s : split) {
-            Token t = stringTokenMap.get(s);
-            if (t != null)
-                tokens[i++] = t;
-        }
-        return tokens;
-    }
-
-    Token getRandomToken(Random rng) {
-        int size = stringTokenMap.size();
-        int index = rng.nextInt(size);
-        Iterator<Token> itr = stringTokenMap.values().iterator();
-        Token out = itr.next();
-        for (int i = 0; i < index; i++)
-            out = itr.next();
-        return out;
     }
 
     Node getRandomNodeFromToken(Token token, Random rng) {
