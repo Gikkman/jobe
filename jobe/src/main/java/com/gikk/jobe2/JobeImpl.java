@@ -44,6 +44,12 @@ class JobeImpl implements Jobe {
     }
 
     @Override
+    public String consumeThenProduce(String input) {
+        consume(input);
+        return produce(input);
+    }
+
+    @Override
     public void consume(String input) {
         if (nodeLength <= nodeOverlap)
             return;
@@ -148,13 +154,7 @@ class JobeImpl implements Jobe {
         return chain.toString();
     }
 
-    @Override
-    public String consumeThenProduce(String input) {
-        consume(input);
-        return produce(input);
-    }
-
-    public Token getOriginToken(Token[] tokens, Random rng) {
+    private Token getOriginToken(Token[] tokens, Random rng) {
         /*
          * The token[] might contain null elements
          */
