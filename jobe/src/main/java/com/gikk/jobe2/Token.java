@@ -12,7 +12,7 @@ class Token
 		this.string = string;
 	}
 
-	void addPoint() {
+	void incrementWeight() {
 		this.points++;
 	}
 

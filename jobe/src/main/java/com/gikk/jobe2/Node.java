@@ -23,6 +23,7 @@
  */
 package com.gikk.jobe2;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,8 +32,8 @@ import java.util.stream.Collectors;
  *
  * @author Gikkman
  */
-public class Node {
-    static final Node EMPTY = new Node(Collections.EMPTY_LIST, -1);
+public class Node implements Comparable<Node>{
+    static final Node EMPTY = new Node(new ArrayList<>(), -1);
 
     private final List<Token> tokens;
     private final int id;
@@ -70,9 +71,9 @@ public class Node {
         return this.weight;
     }
 
-    public void writeToken(StringBuilder b, int index) {
-        if(index >= tokens.size()) return;
-        b.append(" ").append(tokens.get(index));
+    void writeTokens(StringBuilder b, int startIndex) {
+        for(int i = startIndex; i < tokens.size(); i++)
+            b.append(" ").append(tokens.get(i));
     }
 
     @Override
@@ -98,5 +99,11 @@ public class Node {
         }
         final Node other = (Node) obj;
         return this.tokens.equals(other.tokens);
+    }
+
+    @Override
+    public int compareTo(Node o)
+    {
+        return Integer.compare(this.id, o.id);
     }
 }
