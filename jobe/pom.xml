@@ -35,6 +35,37 @@
         </resources>
 
         <plugins>
+            <plugin> <!-- Licence header -->
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <header>../LICENSE</header>
+                    <includes>
+                        <include>src/*/java/**/*.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>  <!-- Code formatter plugin -->
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>2.8.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>  <!-- Compile java 8 compatible bytecode -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
