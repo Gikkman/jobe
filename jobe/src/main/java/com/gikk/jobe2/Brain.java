@@ -30,7 +30,7 @@ import java.util.Random;
 
 import com.gikk.RandomAccessSet;
 
-public class Brain {
+class Brain {
     final Map<String, Token> stringTokenMap = new HashMap<>();
     final Map<Token, RandomAccessSet<Node>> tokenNodeMap = new HashMap<>();
 

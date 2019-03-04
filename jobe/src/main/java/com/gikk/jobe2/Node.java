@@ -24,7 +24,6 @@
 package com.gikk.jobe2;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,11 +47,11 @@ public class Node implements Comparable<Node> {
     }
 
     boolean isLeftmost() {
-        return tokens.get(0).equals(Jobe.START_OF_CHAIN);
+        return tokens.get(0).equals(JobeImpl.START_OF_CHAIN);
     }
 
     boolean isRightmost() {
-        return tokens.get(tokens.size() - 1).equals(Jobe.END_OF_CHAIN);
+        return tokens.get(tokens.size() - 1).equals(JobeImpl.END_OF_CHAIN);
     }
 
     List<Token> getTokens() {

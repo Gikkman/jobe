@@ -34,12 +34,12 @@ import org.junit.Test;
 
 import com.gikk.RandomAccessSet;
 
-public class JobeTest {
+public class JobeImplTest {
     @Test
     public void test() {
         Set<String> results = new HashSet<>();
 
-        Jobe jobe = new Jobe(3, 2);
+        JobeImpl jobe = new JobeImpl(3, 2);
         jobe.consume("this is gikk test");
         jobe.consume("this is a test");
         jobe.consume("this is another test");
