@@ -1,3 +1,26 @@
+/**
+ * The MIT License
+ *
+ * Copyright 2018 Gikkman.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.gikk;
 
 import java.util.AbstractSet;
@@ -15,7 +38,7 @@ import java.util.Random;
  * Thanks to fandrew: https://stackoverflow.com/a/5669034/1943559
  *
  */
-public class RandomAccessSet<E> extends AbstractSet<E>{
+public class RandomAccessSet<E> extends AbstractSet<E> {
     private final List<E> data = new ArrayList<>();
     private final Map<E, Integer> idx = new HashMap<>();
 
@@ -63,7 +86,9 @@ public class RandomAccessSet<E> extends AbstractSet<E>{
 
     /**
      * Removes the item at <code>index</code> and fills the gap with the last element in the collection (to avoid gaps)
-     * @param index index of the element to remove
+     * 
+     * @param index
+     *            index of the element to remove
      */
     private void removeAt(int index) {
         if (index >= data.size()) {
@@ -81,7 +106,7 @@ public class RandomAccessSet<E> extends AbstractSet<E>{
     }
 
     private class Itr implements Iterator<E> {
-        int cursor = 0;   // index of next element to return
+        int cursor = 0; // index of next element to return
         int lastRet = -1; // index of last element returned; -1 if no such
 
         @Override

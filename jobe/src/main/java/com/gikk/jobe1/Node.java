@@ -1,4 +1,4 @@
-/*
+/**
  * The MIT License
  *
  * Copyright 2018 Gikkman.
@@ -40,14 +40,14 @@ public class Node {
 
     Node(int len, String... tokens) {
         this.tokens = new ArrayList<>(len);
-        for(int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
             this.tokens.add(i, tokens[i]);
         }
 
         this.hashCache = this.tokens.hashCode();
     }
 
-    List<String> getTokens(){
+    List<String> getTokens() {
         return this.tokens;
     }
 
@@ -60,13 +60,14 @@ public class Node {
     }
 
     public void writeToken(StringBuilder b, int index) {
-        if(index >= tokens.size()) return;
+        if (index >= tokens.size())
+            return;
         b.append(" ").append(tokens.get(index));
     }
 
     @Override
     public String toString() {
-        return id + ":" + tokens.stream().collect( Collectors.joining("-","[","]") );
+        return id + ":" + tokens.stream().collect(Collectors.joining("-", "[", "]"));
     }
 
     @Override

@@ -1,4 +1,4 @@
-/*
+/**
  * The MIT License
  *
  * Copyright 2018 Gikkman.
@@ -58,7 +58,7 @@ public class Jobe1 {
     private final Map<Edge, RandomAccessSet<Edge>> RIGHTWARDS = new HashMap<>();
     private final Map<Edge, RandomAccessSet<Edge>> LEFTWARDS = new HashMap<>();
 
-    public static void main(String ... args) throws UnsupportedEncodingException {
+    public static void main(String... args) throws UnsupportedEncodingException {
         Set<String> results = new HashSet<>();
 
         Jobe1 jobe = new Jobe1();
@@ -68,8 +68,8 @@ public class Jobe1 {
         jobe.consume("another test would be good");
         jobe.consume("test test");
 
-        for(int i = 0; i < 10000; i++) {
-            try{
+        for (int i = 0; i < 10000; i++) {
+            try {
                 results.add(jobe.produce("nones"));
                 results.add(jobe.produce("test"));
             } catch (Exception ex) {
@@ -81,77 +81,68 @@ public class Jobe1 {
         results.stream().forEach(System.out::println);
 
         System.out.println("\nNodes:");
-        jobe.TOKEN_TO_NODES.values().stream()
-            .flatMap(set -> set.stream())
-            .distinct()
-            .sorted( (Node o1, Node o2) -> o1.getNodeID() - o2.getNodeID())
-            .forEach(n -> System.out.println(n.toString()));
+        jobe.TOKEN_TO_NODES.values().stream().flatMap(set -> set.stream()).distinct()
+                .sorted((Node o1, Node o2) -> o1.getNodeID() - o2.getNodeID())
+                .forEach(n -> System.out.println(n.toString()));
 
         System.out.println("\nTokens:");
-        for(Map.Entry<String, RandomAccessSet<Node>> e : jobe.TOKEN_TO_NODES.entrySet()) {
+        for (Map.Entry<String, RandomAccessSet<Node>> e : jobe.TOKEN_TO_NODES.entrySet()) {
             String val = e.getValue().stream().map(Node::toString).collect(Collectors.joining(","));
             String key = String.format("Key: %-8s ", e.getKey());
             String value = "Val: " + val;
-            System.out.println(key + value);   
+            System.out.println(key + value);
         }
 
         System.out.println("\nEdges LEFT:");
-        for(Map.Entry<Edge, RandomAccessSet<Edge>> e : jobe.LEFTWARDS.entrySet()) {
-           String val = e.getValue().stream()
-                .sorted( (Edge e1, Edge e2) ->
-                    e1.getLeftNodeID() - e2.getLeftNodeID()
-                ).map(Edge::toString)
-                .collect(Collectors.joining(","));
-            System.out.println("Key: " + e.getKey() +" Val: " + val);
+        for (Map.Entry<Edge, RandomAccessSet<Edge>> e : jobe.LEFTWARDS.entrySet()) {
+            String val = e.getValue().stream().sorted((Edge e1, Edge e2) -> e1.getLeftNodeID() - e2.getLeftNodeID())
+                    .map(Edge::toString).collect(Collectors.joining(","));
+            System.out.println("Key: " + e.getKey() + " Val: " + val);
         }
 
         System.out.println("\nEdges RIGHT:");
-        for(Map.Entry<Edge, RandomAccessSet<Edge>> e : jobe.RIGHTWARDS.entrySet()) {
-            String val = e.getValue().stream()
-                .sorted( (Edge e1, Edge e2) ->
-                    e1.getRightNodeID() - e2.getRightNodeID()
-                ).map(Edge::toString)
-                .collect(Collectors.joining(","));
-            System.out.println("Key: " + e.getKey() +" Val: " + val);
+        for (Map.Entry<Edge, RandomAccessSet<Edge>> e : jobe.RIGHTWARDS.entrySet()) {
+            String val = e.getValue().stream().sorted((Edge e1, Edge e2) -> e1.getRightNodeID() - e2.getRightNodeID())
+                    .map(Edge::toString).collect(Collectors.joining(","));
+            System.out.println("Key: " + e.getKey() + " Val: " + val);
         }
     }
 
     public synchronized void consume(String s) {
-        if( NODE_LEN <= OVERLAP ) return;
-        if( NODE_LEN < 1 ) return;
+        if (NODE_LEN <= OVERLAP)
+            return;
+        if (NODE_LEN < 1)
+            return;
 
         // Split incomming message into tokens
         String[] tokens = s.split("\\s+");
         int tokensLenght = tokens.length;
 
-        if(tokensLenght <= NODE_LEN) return;
+        if (tokensLenght <= NODE_LEN)
+            return;
 
         // Array for representing node segments
         String[] nextNode = new String[NODE_LEN];
         nextNode[0] = START_OF_CHAIN;
 
-        /** The idea is to construct several token series, where each series
-         * is equal to the previous one shifted a number of steps to the left.
+        /**
+         * The idea is to construct several token series, where each series is equal to the previous one shifted a
+         * number of steps to the left.
          *
-         * The number of tokens in each segment is managed by LINK_LEN and the
-         * number of steps we shift left is LINK_LEN - OVERLAP. Say we have a
-         * LINK_LEN of 3, and an OVERLAP of 1, then shifting "I am hungry" two
-         * steps left gives us just "hungry _ _", which conveniently is one
-         * token of overlap.
+         * The number of tokens in each segment is managed by LINK_LEN and the number of steps we shift left is LINK_LEN
+         * - OVERLAP. Say we have a LINK_LEN of 3, and an OVERLAP of 1, then shifting "I am hungry" two steps left gives
+         * us just "hungry _ _", which conveniently is one token of overlap.
          *
-         * As an example, the sentence "I am hungry", with a LINK_LEN of 3 and
-         * overlap of 1, should produce the following series:
-         * "\\s I am"
-         * "am very hungry"
-         * "hungry \\e \\e"
-         * As seen, we fill out the final series with END_OF_CHAIN tokens.
+         * As an example, the sentence "I am hungry", with a LINK_LEN of 3 and overlap of 1, should produce the
+         * following series: "\\s I am" "am very hungry" "hungry \\e \\e" As seen, we fill out the final series with
+         * END_OF_CHAIN tokens.
          *
          */
         int tokensIndex = 0;
         int nextTokenPos;
         List<Node> nodes = new ArrayList<>();
 
-        if(NODE_LEN == 1) {
+        if (NODE_LEN == 1) {
             nextTokenPos = 0;
             Node node = registerNode(nextNode);
             nodes.add(node);
@@ -159,18 +150,19 @@ public class Jobe1 {
             nextTokenPos = 1;
         }
 
-        while(tokensIndex < tokensLenght){
+        while (tokensIndex < tokensLenght) {
             String token = tokens[tokensIndex++];
-            if(token.isEmpty()) continue;
+            if (token.isEmpty())
+                continue;
 
             nextNode[nextTokenPos++] = token;
-            if(nextTokenPos == NODE_LEN) {
+            if (nextTokenPos == NODE_LEN) {
                 // Create a node and register it for a unique ID
                 Node node = registerNode(nextNode);
                 nodes.add(node);
 
-                 //Shift array left LINK_LEN-OVERLAP steps
-                System.arraycopy(nextNode, NODE_LEN-OVERLAP, nextNode, 0, OVERLAP);
+                // Shift array left LINK_LEN-OVERLAP steps
+                System.arraycopy(nextNode, NODE_LEN - OVERLAP, nextNode, 0, OVERLAP);
                 nextTokenPos = OVERLAP;
             }
         }
@@ -183,7 +175,7 @@ public class Jobe1 {
         int previousNodeID = -1;
         int currentNodeID = nodes.get(0).getNodeID();
         int nextNodeID = -1;
-        for(int i = 1; i <= nodes.size(); i++) {
+        for (int i = 1; i <= nodes.size(); i++) {
             nextNodeID = i == nodes.size() ? -1 : nodes.get(i).getNodeID();
 
             // Create edges, and assign which nodes they point to
@@ -196,18 +188,10 @@ public class Jobe1 {
             rightEdge.setRightNodeID(nextNodeID);
 
             // Register edge relations
-            RIGHTWARDS.computeIfAbsent(
-                    leftEdge,
-                    e -> new RandomAccessSet<>())
-                .add(rightEdge);
-            LEFTWARDS.computeIfAbsent(
-                    rightEdge,
-                    e -> new RandomAccessSet<>())
-                .add(leftEdge);
+            RIGHTWARDS.computeIfAbsent(leftEdge, e -> new RandomAccessSet<>()).add(rightEdge);
+            LEFTWARDS.computeIfAbsent(rightEdge, e -> new RandomAccessSet<>()).add(leftEdge);
 
-            Set<Edge> edgeMap = NODEID_TO_EDGES.computeIfAbsent(
-                currentNodeID,
-                n -> new RandomAccessSet<>());
+            Set<Edge> edgeMap = NODEID_TO_EDGES.computeIfAbsent(currentNodeID, n -> new RandomAccessSet<>());
             edgeMap.add(leftEdge);
             edgeMap.add(rightEdge);
 
@@ -217,74 +201,71 @@ public class Jobe1 {
         }
     }
 
-    private synchronized Node registerNode(String[] tokens){
+    private synchronized Node registerNode(String[] tokens) {
         return registerNode(tokens.length, tokens);
     }
 
     private synchronized Node registerNode(int len, String[] tokens) {
         Node node = new Node(len, tokens);
-        int id = NODE_TO_NODEID.computeIfAbsent(
-            node,
-            (t) -> {
-                for(String token : tokens) {
-                    TOKEN_TO_NODES.computeIfAbsent(
-                            token,
-                            (tt) -> new RandomAccessSet<>())
-                        .add(node);
-                }
-
-                int generatedID = NODE_TO_NODEID.size();
-                node.setID(generatedID);
-                NODEID_TO_NODE.put(generatedID, node);
-
-                return generatedID;
+        int id = NODE_TO_NODEID.computeIfAbsent(node, (t) -> {
+            for (String token : tokens) {
+                TOKEN_TO_NODES.computeIfAbsent(token, (tt) -> new RandomAccessSet<>()).add(node);
             }
-        );
+
+            int generatedID = NODE_TO_NODEID.size();
+            node.setID(generatedID);
+            NODEID_TO_NODE.put(generatedID, node);
+
+            return generatedID;
+        });
         return NODEID_TO_NODE.get(id);
     }
 
     public String produce(String i) {
         Random rng = new Random();
-        
+
         RandomAccessSet<Node> set = TOKEN_TO_NODES.get(i);
-        if(set == null) set = getRandomSet(rng);
-        
+        if (set == null)
+            set = getRandomSet(rng);
+
         Node n = set.getRandom(rng);
-        if(n == null) return "";
+        if (n == null)
+            return "";
 
         Edge e = NODEID_TO_EDGES.get(n.getNodeID()).getRandom(rng);
-        if(e == null) return "";
+        if (e == null)
+            return "";
 
         Edge originEdge = e;
         Deque<Node> nodes = new ArrayDeque<>();
 
         Edge left = originEdge;
-        while(!left.isLeftmost()) {
-            Node node = NODEID_TO_NODE.get( left.getLeftNodeID() );
+        while (!left.isLeftmost()) {
+            Node node = NODEID_TO_NODE.get(left.getLeftNodeID());
             nodes.addFirst(node);
             RandomAccessSet<Edge> ras = LEFTWARDS.get(left);
             left = ras.getRandom(rng);
         }
 
         Edge right = originEdge;
-        while(!right.isRightmost()) {
-            Node node = NODEID_TO_NODE.get( right.getRightNodeID());
+        while (!right.isRightmost()) {
+            Node node = NODEID_TO_NODE.get(right.getRightNodeID());
             nodes.addLast(node);
             RandomAccessSet<Edge> ras = RIGHTWARDS.get(right);
             right = ras.getRandom(rng);
         }
 
         // Print the NODES
-//        PrintStream printStream = new PrintStream(System.out, true, StandardCharsets.UTF_8.name());
+        // PrintStream printStream = new PrintStream(System.out, true, StandardCharsets.UTF_8.name());
         StringBuilder builder = new StringBuilder();
         int j = 0;
-        for(Node node : nodes) {
-            while(j < NODE_LEN) {
+        for (Node node : nodes) {
+            while (j < NODE_LEN) {
                 node.writeToken(builder, j++);
             }
             j = OVERLAP;
         }
-//        printStream.close();
+        // printStream.close();
         return builder.toString();
     }
 
@@ -293,7 +274,8 @@ public class Jobe1 {
         int key = rng.nextInt(max);
         int i = 0;
         Iterator<RandomAccessSet<Node>> itr = TOKEN_TO_NODES.values().iterator();
-        while(++i < key) itr.next();
+        while (++i < key)
+            itr.next();
         return itr.next();
     }
 }

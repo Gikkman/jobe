@@ -1,4 +1,4 @@
-/*
+/**
  * The MIT License
  *
  * Copyright 2018 Gikkman.
@@ -34,7 +34,7 @@ public class NodePrototype {
     private final List<Token> tokens = new ArrayList<>();
 
     public NodePrototype(Token[] tokens, int lengt) {
-        for(int i = 0; i < lengt; i++) {
+        for (int i = 0; i < lengt; i++) {
             this.tokens.add(tokens[i]);
         }
     }
@@ -45,7 +45,7 @@ public class NodePrototype {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof NodePrototype)) {
+        if (!(obj instanceof NodePrototype)) {
             return false;
         }
         NodePrototype other = (NodePrototype) obj;

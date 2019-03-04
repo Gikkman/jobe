@@ -1,4 +1,4 @@
-/*
+/**
  * The MIT License
  *
  * Copyright 2018 Gikkman.
@@ -52,8 +52,10 @@ public class Jobe {
     }
 
     public void consume(String s) {
-        if( NODE_LEN <= OVERLAP ) return;
-        if( NODE_LEN < 1 ) return;
+        if (NODE_LEN <= OVERLAP)
+            return;
+        if (NODE_LEN < 1)
+            return;
         String[] split = tokenizer.split(s);
         Token[] tokens = brain.registerTokens(split);
 
@@ -62,21 +64,16 @@ public class Jobe {
         nextTokens[0] = START_OF_CHAIN;
 
         /*
-         * The idea is to construct several token series, where each series
-         * is equal to the previous one shifted a number of steps to the left.
+         * The idea is to construct several token series, where each series is equal to the previous one shifted a
+         * number of steps to the left.
          *
-         * The number of tokens in each segment is managed by LINK_LEN and the
-         * number of steps we shift left is LINK_LEN - OVERLAP. Say we have a
-         * LINK_LEN of 3, and an OVERLAP of 1, then shifting "I am hungry" two
-         * steps left gives us just "hungry _ _", which conveniently is one
-         * token of overlap.
+         * The number of tokens in each segment is managed by LINK_LEN and the number of steps we shift left is LINK_LEN
+         * - OVERLAP. Say we have a LINK_LEN of 3, and an OVERLAP of 1, then shifting "I am hungry" two steps left gives
+         * us just "hungry _ _", which conveniently is one token of overlap.
          *
-         * As an example, the sentence "I am hungry", with a LINK_LEN of 3 and
-         * overlap of 1, should produce the following series:
-         * "\\s I am"
-         * "am very hungry"
-         * "hungry \\e \\e"
-         * As seen, we fill out the final series with END_OF_CHAIN tokens.
+         * As an example, the sentence "I am hungry", with a LINK_LEN of 3 and overlap of 1, should produce the
+         * following series: "\\s I am" "am very hungry" "hungry \\e \\e" As seen, we fill out the final series with
+         * END_OF_CHAIN tokens.
          *
          */
         int tokensIndex = 0;
@@ -84,7 +81,7 @@ public class Jobe {
         List<Node> nodes = new ArrayList<>();
 
         // Special case for chains of length 1
-        if(NODE_LEN == 1) {
+        if (NODE_LEN == 1) {
             nextTokenPos = 0;
             NodePrototype proto = new NodePrototype(nextTokens, 1);
             Node node = brain.registerNode(proto);
@@ -93,16 +90,16 @@ public class Jobe {
             nextTokenPos = 1;
         }
 
-        while(tokensIndex < tokens.length){
+        while (tokensIndex < tokens.length) {
             nextTokens[nextTokenPos++] = tokens[tokensIndex++];
-            if(nextTokenPos == NODE_LEN) {
+            if (nextTokenPos == NODE_LEN) {
                 // Create a node and register it for a unique ID
                 NodePrototype proto = new NodePrototype(nextTokens, nextTokenPos);
                 Node node = brain.registerNode(proto);
                 nodes.add(node);
 
-                 //Shift array left LINK_LEN-OVERLAP steps
-                System.arraycopy(nextTokens, NODE_LEN-OVERLAP, nextTokens, 0, OVERLAP);
+                // Shift array left LINK_LEN-OVERLAP steps
+                System.arraycopy(nextTokens, NODE_LEN - OVERLAP, nextTokens, 0, OVERLAP);
                 nextTokenPos = OVERLAP;
             }
         }
@@ -116,7 +113,7 @@ public class Jobe {
         Node previousNode = Node.EMPTY;
         Node currentNode = nodes.get(0);
         Node nextNode;
-        for(int i = 1; i <= nodes.size(); i++) {
+        for (int i = 1; i <= nodes.size(); i++) {
             nextNode = i == nodes.size() ? Node.EMPTY : nodes.get(i);
 
             // Register edge relations
@@ -132,21 +129,23 @@ public class Jobe {
     public String produce(String i) {
         Random rng = new Random();
         Token token = brain.getToken(i);
-        if(token == null) token = brain.getRandomToken(rng);
+        if (token == null)
+            token = brain.getRandomToken(rng);
 
         Node originNode = brain.getRandomNodeFromToken(token, rng);
-        if(originNode == null) return null;
+        if (originNode == null)
+            return null;
 
         Chain chain = new Chain(originNode, OVERLAP);
 
         Node left = originNode;
-        while(!left.isLeftmost()) {
-            left = brain.getNodeLeftOf(left,rng);
+        while (!left.isLeftmost()) {
+            left = brain.getNodeLeftOf(left, rng);
             chain.addFirst(left);
         }
 
         Node right = originNode;
-        while(!right.isRightmost()) {
+        while (!right.isRightmost()) {
             right = brain.getNodeRightOf(right, rng);
             chain.addLast(right);
         }

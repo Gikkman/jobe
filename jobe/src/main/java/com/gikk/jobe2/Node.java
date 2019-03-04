@@ -1,4 +1,4 @@
-/*
+/**
  * The MIT License
  *
  * Copyright 2018 Gikkman.
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  *
  * @author Gikkman
  */
-public class Node implements Comparable<Node>{
+public class Node implements Comparable<Node> {
     static final Node EMPTY = new Node(new ArrayList<>(), -1);
 
     private final List<Token> tokens;
@@ -52,10 +52,10 @@ public class Node implements Comparable<Node>{
     }
 
     boolean isRightmost() {
-        return tokens.get(tokens.size()-1).equals(Jobe.END_OF_CHAIN);
+        return tokens.get(tokens.size() - 1).equals(Jobe.END_OF_CHAIN);
     }
 
-    List<Token> getTokens(){
+    List<Token> getTokens() {
         return this.tokens;
     }
 
@@ -72,13 +72,13 @@ public class Node implements Comparable<Node>{
     }
 
     void writeTokens(StringBuilder b, int startIndex) {
-        for(int i = startIndex; i < tokens.size(); i++)
+        for (int i = startIndex; i < tokens.size(); i++)
             b.append(" ").append(tokens.get(i));
     }
 
     @Override
     public String toString() {
-        return id + ":" + tokens.stream().map(Token::getString).collect( Collectors.joining("-","[","]") );
+        return id + ":" + tokens.stream().map(Token::getString).collect(Collectors.joining("-", "[", "]"));
     }
 
     @Override
@@ -102,8 +102,7 @@ public class Node implements Comparable<Node>{
     }
 
     @Override
-    public int compareTo(Node o)
-    {
+    public int compareTo(Node o) {
         return Integer.compare(this.id, o.id);
     }
 }
