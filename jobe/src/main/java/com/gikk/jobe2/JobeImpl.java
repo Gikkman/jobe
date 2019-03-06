@@ -26,9 +26,6 @@ package com.gikk.jobe2;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
-
-import com.gikk.RandomAccessSet;
 
 class JobeImpl implements Jobe {
     private final Executor executor = Executors.newSingleThreadExecutor();
@@ -71,30 +68,6 @@ class JobeImpl implements Jobe {
         Token originToken = getOriginToken(tokens, rng);
         Chain chain = brain.generate(originToken, rng);
         return chain.toString();
-    }
-
-    @Override
-    public void produceAsync(String input, Consumer<String> resultConsumer) {
-        executor.execute(() -> {
-            Random rng = new Random();
-
-            String[] split = this.tokenizer.split(input);
-            Token[] tokens = brain.getTokens(split);
-            RandomAccessSet<Chain> candidateChains = new RandomAccessSet<>();
-
-            /*
-             * We generate multiple candidate chains, as many as we can for 1 second, and then let the scorer decide
-             * which of the chains to return.
-             */
-            long now = System.currentTimeMillis();
-            do {
-                Token originToken = getOriginToken(tokens, rng);
-                Chain chain = brain.generate(originToken, rng);
-                candidateChains.add(chain);
-            } while (System.currentTimeMillis() - now < 1000);
-            Chain winner = candidateChains.getRandom(rng);
-            resultConsumer.accept(winner.toString());
-        });
     }
 
     private Token getOriginToken(Token[] tokens, Random rng) {

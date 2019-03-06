@@ -36,7 +36,7 @@ class TestUtil {
     private static final Map<NodePrototype, Node> NODE_MAP = new HashMap<>();
 
     static Token createToken(String word) {
-        if (!TOKEN_MAP.containsKey(word)){
+        if (!TOKEN_MAP.containsKey(word)) {
             Token token = new Token(word);
             TOKEN_MAP.put(word, token);
         }

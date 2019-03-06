@@ -23,74 +23,39 @@
  */
 package com.gikk.jobe2;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertFalse;
 
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import com.gikk.RandomAccessSet;
 
 public class JobeImplTest {
     @Test
-    @Ignore
-    public void testSync() {
-        Set<String> results = new HashSet<>();
-
+    public void testConsumeThenProduce() {
         JobeImpl jobe = new JobeImpl(3, 2);
-        jobe.consume("this is gikk test");
+        String output = jobe.consumeThenProduce("this is a test");
+        assertFalse("Jobe produced nothing", output.isEmpty());
+    }
+
+    @Test
+    public void testConsumeThenProduceManually() {
+        JobeImpl jobe = new JobeImpl(3, 2);
         jobe.consume("this is a test");
-        jobe.consume("this is another test");
-        jobe.consume("another test yo");
-        jobe.consume("another test would be good");
-        jobe.consume("test test");
+        String output = jobe.produce("test");
+        assertFalse("Jobe produced nothing", output.isEmpty());
+    }
 
-        for (int i = 0; i < 10000; i++) {
-            try {
-                results.add(jobe.produce("test me"));
-                results.add(jobe.produce("gikkman"));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+    @Test
+    public void testConsumeThenProduceFromUnknown() {
+        JobeImpl jobe = new JobeImpl(3, 2);
+        jobe.consume("this is a test");
+        String output = jobe.produce("jobe");
+        assertFalse("Jobe produced nothing", output.isEmpty());
+    }
 
-        System.out.println("\nOutput:");
-        results.forEach(System.out::println);
-
-        System.out.println("\nNodes:");
-        jobe.brain.nodeMap.values().stream().sorted(Comparator.comparingInt(Node::getNodeID))
-                .forEach(n -> System.out.println(n.toString()));
-
-        System.out.println("\nTokens:");
-        for (Map.Entry<Token, RandomAccessSet<Node>> e : jobe.brain.tokenNodeMap.entrySet()) {
-            String val = e.getValue().stream().map(Node::toString).collect(Collectors.joining(","));
-            String key = String.format("Key: %-8s ", e.getKey());
-            String value = "Val: " + val;
-            System.out.println(key + value);
-        }
-
-        System.out.println("\nEdges LEFT:");
-        for (Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.brain.leftwards.entrySet()) {
-            String val = e.getValue().stream().sorted(Comparator.comparing(Edge::getLeftNode)).map(Edge::toString)
-                    .collect(Collectors.joining(","));
-            String key = String.format("Key: %-4s ", e.getKey());
-            String value = "Val: " + val;
-            System.out.println(key + value);
-        }
-
-        System.out.println("\nEdges RIGHT:");
-        for (Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.brain.rightwards.entrySet()) {
-            String val = e.getValue().stream().sorted(Comparator.comparing(Edge::getRightNode)).map(Edge::toString)
-                    .collect(Collectors.joining(","));
-            String key = String.format("Key: %-4s ", e.getKey());
-            String value = "Val: " + val;
-            System.out.println(key + value);
-        }
-
-        Assert.assertTrue(true);
+    @Test
+    public void testProduceWhenNothingLearned() {
+        JobeImpl jobe = new JobeImpl(3, 2);
+        String output = jobe.produce("jobe");
+        assertTrue("Jobe produced something when nothing was learned", output.isEmpty());
     }
 }

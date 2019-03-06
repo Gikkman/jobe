@@ -125,6 +125,9 @@ class Brain {
     }
 
     Chain generate(Token originToken, Random rng) {
+        if (originToken == null)
+            return new Chain(new ArrayDeque<>(), nodeOverlap);
+
         Node originNode = getRandomNodeFromToken(originToken, rng);
         Deque<Node> deque = new ArrayDeque<>();
         deque.add(originNode);
