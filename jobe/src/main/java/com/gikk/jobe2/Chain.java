@@ -24,24 +24,20 @@
 package com.gikk.jobe2;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
+import java.util.Objects;
 
 class Chain {
-    private final Deque<Node> nodes;
+    private final List<Node> nodes;
     private final int overlap;
+    private final int hashCache;
 
-    Chain(Node origin, int overlap) {
-        this.nodes = new ArrayDeque<>();
-        this.nodes.add(origin);
+    Chain(Deque<Node> deque, int overlap) {
+        this.nodes = new ArrayList<>(deque);
         this.overlap = overlap;
-    }
-
-    void addFirst(Node node) {
-        this.nodes.addFirst(node);
-    }
-
-    void addLast(Node node) {
-        this.nodes.addLast(node);
+        this.hashCache = Objects.hash(nodes, overlap);
     }
 
     @Override
@@ -53,5 +49,20 @@ class Chain {
             startIndex = overlap;
         }
         return builder.toString().trim();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Chain chain = (Chain) o;
+        return overlap == chain.overlap && nodes.equals(chain.nodes);
+    }
+
+    @Override
+    public int hashCode() {
+        return hashCache;
     }
 }

@@ -30,13 +30,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gikk.RandomAccessSet;
 
 public class JobeImplTest {
     @Test
-    public void test() {
+    @Ignore
+    public void testSync() {
         Set<String> results = new HashSet<>();
 
         JobeImpl jobe = new JobeImpl(3, 2);
@@ -49,7 +51,7 @@ public class JobeImplTest {
 
         for (int i = 0; i < 10000; i++) {
             try {
-                results.add(jobe.produce("test"));
+                results.add(jobe.produce("test me"));
                 results.add(jobe.produce("gikkman"));
             } catch (Exception ex) {
                 ex.printStackTrace();

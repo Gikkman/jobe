@@ -23,14 +23,46 @@
  */
 package com.gikk.jobe2;
 
+import java.util.function.Consumer;
+
 public interface Jobe {
     void consume(String input);
 
+    /**
+     * Produces one candidate string from the brain, and returns the value
+     *
+     * @param input
+     *            the string to sample for tokens
+     * @return the produced string
+     */
     String produce(String input);
 
+    /**
+     * Continuously produces candidate strings from the brain for one second, asynchronously, then returns the produced
+     * candidate with the lowest frequency score.
+     * 
+     * @param input
+     *            the string to sample for tokens
+     * @param resultConsumer
+     *            the method which will consume the result
+     */
+    void produceAsync(String input, Consumer<String> resultConsumer);
+
+    /**
+     * Consumes the input string, then produces a single candidate string from the brain, and returns the value
+     * 
+     * @param input
+     *            the string to consume into the brain, and to use to sample for tokens
+     * @return the produced string
+     */
     String consumeThenProduce(String input);
 
-    static Jobe getDefault() {
+    /**
+     * Returns a Jobe instance
+     * 
+     * @return an instance
+     */
+    public static Jobe getDefault() {
         return new JobeImpl(3, 2);
     }
 }

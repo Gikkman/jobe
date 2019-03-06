@@ -24,15 +24,14 @@
 package com.gikk.jobe2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class NodePrototype {
     private final List<Token> tokens = new ArrayList<>();
 
-    NodePrototype(Token[] tokens, int length) {
-        for (int i = 0; i < length; i++) {
-            this.tokens.add(tokens[i]);
-        }
+    NodePrototype(Token... tokens) {
+        this.tokens.addAll(Arrays.asList(tokens));
     }
 
     List<Token> getTokens() {

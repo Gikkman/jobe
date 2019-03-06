@@ -23,12 +23,12 @@
  */
 package com.gikk.jobe2;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Node implements Comparable<Node> {
-    static final Node EMPTY = new Node(new ArrayList<>(), -1);
+    static final Node EMPTY = new Node(new NodePrototype(), -1);
 
     private final List<Token> tokens;
     private final int id;
@@ -36,18 +36,18 @@ public class Node implements Comparable<Node> {
 
     private int weight = 0;
 
-    Node(List<Token> tokens, int id) {
-        this.tokens = tokens;
+    Node(NodePrototype prototype, int id) {
+        this.tokens = prototype.getTokens();
         this.id = id;
-        this.hashCache = this.tokens.hashCode();
+        this.hashCache = Objects.hash(tokens, id);
     }
 
     boolean isLeftmost() {
-        return tokens.get(0).equals(JobeImpl.START_OF_CHAIN);
+        return tokens.get(0).equals(Brain.START_OF_CHAIN);
     }
 
     boolean isRightmost() {
-        return tokens.get(tokens.size() - 1).equals(JobeImpl.END_OF_CHAIN);
+        return tokens.get(tokens.size() - 1).equals(Brain.END_OF_CHAIN);
     }
 
     List<Token> getTokens() {

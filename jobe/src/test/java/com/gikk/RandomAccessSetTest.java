@@ -23,7 +23,7 @@
  */
 package com.gikk;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Random;
 
@@ -34,13 +34,13 @@ public class RandomAccessSetTest {
     public void testAdd() {
         RandomAccessSet<Integer> set = new RandomAccessSet<>();
 
-        set.add(1);
+        assertTrue("Adding unique returned wrong status", set.add(1));
         assertEquals("RandoAccessSet.size() missmatch", 1, set.size());
 
-        set.add(1);
+        assertFalse("Adding duplicate returned wrong status", set.add(1));
         assertEquals("RandoAccessSet.size() missmatch", 1, set.size());
 
-        set.add(2);
+        assertTrue("Adding unique returned wrong status", set.add(2));
         assertEquals("RandoAccessSet.size() missmatch", 2, set.size());
     }
 

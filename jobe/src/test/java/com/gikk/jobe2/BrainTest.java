@@ -99,12 +99,8 @@ public class BrainTest {
 
     @Test
     public void testRegisterNode() {
+        NodePrototype n1 = TestUtil.createNodePrototype("hello", "world");
         Brain brain = new Brain();
-        Token[] t1 = { new Token("hello"), new Token("world") };
-        Token[] t2 = { new Token("lore"), new Token("ipsum") };
-        NodePrototype n1 = new NodePrototype(t1, t1.length);
-        NodePrototype n2 = new NodePrototype(t2, t2.length);
-
         Node node1 = brain.registerNode(n1);
         assertEquals("Brain didn't register a node for {'hello','world'}", 1, brain.nodeMap.size());
         assertEquals("Brain didn't map {'hello'} and {'world'} to {'hello','world'}", 2, brain.tokenNodeMap.size());

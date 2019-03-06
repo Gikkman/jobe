@@ -27,11 +27,12 @@ import java.util.Objects;
 
 class Token {
     private final String string;
+    private final int hashCache;
     private int points = 0;
-    private int hashCache = Integer.MIN_VALUE;
 
     Token(String string) {
         this.string = string;
+        this.hashCache = Objects.hash(string);
     }
 
     void incrementWeight() {
@@ -58,10 +59,7 @@ class Token {
 
     @Override
     public int hashCode() {
-        if (this.hashCache != Integer.MIN_VALUE)
-            return this.hashCache;
-        this.hashCache = Objects.hash(this.string);
-        return this.hashCache;
+        return hashCache;
     }
 
     @Override
