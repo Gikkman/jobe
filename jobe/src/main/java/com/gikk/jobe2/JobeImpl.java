@@ -73,7 +73,9 @@ class JobeImpl implements Jobe {
         int currentLowestWeight = -1;
         Token currentWinningToken = null;
         for (Token token : tokens) {
-            if (token != null && token.getWeight() > currentLowestWeight) {
+            // Tokens with weight 1 has only been seen once, and might be a simple misspelling.
+            // Hence, we want a word to have at least occured twice
+            if (token != null && token.getWeight() > currentLowestWeight && token.getWeight() > 1) {
                 currentWinningToken = token;
             }
         }
