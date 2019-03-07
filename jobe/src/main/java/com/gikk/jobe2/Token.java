@@ -1,7 +1,7 @@
 /**
  * The MIT License
  *
- * Copyright 2018 Gikkman.
+ * Copyright 2018-2019 Gikkman.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ class Token {
         if (o == null || getClass() != o.getClass())
             return false;
         Token token = (Token) o;
-        if(this.hashCache != token.hashCache) 
+        if (this.hashCache != token.hashCache)
             return false;
         return Objects.equals(this.string, token.string);
     }
