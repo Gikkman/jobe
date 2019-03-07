@@ -25,7 +25,6 @@ package com.gikk.jobe2;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
-
 import org.junit.Test;
 
 public class JobeImplTest {
@@ -33,7 +32,7 @@ public class JobeImplTest {
     public void testConsumeThenProduce() {
         JobeImpl jobe = new JobeImpl(3, 2);
         String output = jobe.consumeThenProduce("this is a test");
-        assertFalse("Jobe produced nothing", output.isEmpty());
+        assertFalse("Jobe produced nothing, after consuming", output.isEmpty());
     }
 
     @Test
@@ -41,7 +40,7 @@ public class JobeImplTest {
         JobeImpl jobe = new JobeImpl(3, 2);
         jobe.consume("this is a test");
         String output = jobe.produce("test");
-        assertFalse("Jobe produced nothing", output.isEmpty());
+        assertFalse("Jobe produced nothing, when getting known input", output.isEmpty());
     }
 
     @Test
@@ -49,7 +48,7 @@ public class JobeImplTest {
         JobeImpl jobe = new JobeImpl(3, 2);
         jobe.consume("this is a test");
         String output = jobe.produce("jobe");
-        assertFalse("Jobe produced nothing", output.isEmpty());
+        assertFalse("Jobe produced nothing, when getting unknown input", output.isEmpty());
     }
 
     @Test

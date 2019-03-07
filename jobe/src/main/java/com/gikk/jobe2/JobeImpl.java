@@ -24,12 +24,8 @@
 package com.gikk.jobe2;
 
 import java.util.Random;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 class JobeImpl implements Jobe {
-    private final Executor executor = Executors.newSingleThreadExecutor();
-
     private final StringSplitter tokenizer = StringSplitter.getDefault();
     private final int nodeLength;
     private final int nodeOverlap;
@@ -63,7 +59,7 @@ class JobeImpl implements Jobe {
     @Override
     public String produce(String input) {
         Random rng = new Random();
-        String[] split = this.tokenizer.split(input);
+        String[] split = tokenizer.split(input);
         Token[] tokens = brain.getTokens(split);
         Token originToken = getOriginToken(tokens, rng);
         Chain chain = brain.generate(originToken, rng);
