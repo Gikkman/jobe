@@ -23,6 +23,7 @@
  */
 package com.gikk.jobe2;
 
+import com.gikk.RandomAccessSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -32,11 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.gikk.RandomAccessSet;
-
 class Brain {
-    static final Token START_OF_CHAIN = new Token("\\s");
-    static final Token END_OF_CHAIN = new Token("\\e");
+    static final Token START_OF_CHAIN = new TokenStop("\\s");
+    static final Token END_OF_CHAIN = new TokenStop("\\e");
 
     final Map<String, Token> stringTokenMap = new HashMap<>();
     final Map<Token, RandomAccessSet<Node>> tokenNodeMap = new HashMap<>();

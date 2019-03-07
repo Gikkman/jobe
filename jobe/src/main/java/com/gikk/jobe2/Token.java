@@ -54,16 +54,18 @@ class Token {
         if (o == null || getClass() != o.getClass())
             return false;
         Token token = (Token) o;
+        if(this.hashCache != token.hashCache) 
+            return false;
         return Objects.equals(this.string, token.string);
     }
 
     @Override
     public int hashCode() {
-        return hashCache;
+        return this.hashCache;
     }
 
     @Override
     public String toString() {
-        return string;
+        return this.string;
     }
 }
