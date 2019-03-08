@@ -91,6 +91,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Code Coverage report to Coverals -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+            </plugin>
+
             <!-- Compile java 8 compatible bytecode -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
