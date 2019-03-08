@@ -29,9 +29,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import javafx.scene.layout.BorderImage;
-import sun.reflect.generics.tree.VoidDescriptor;
-
 public class NodeTest {
     @Test
     public void testGetId() {
