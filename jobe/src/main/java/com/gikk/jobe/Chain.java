@@ -21,36 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 
-class NodePrototype {
-    private final List<Token> tokens = new ArrayList<>();
+class Chain {
+    private final List<Node> nodes;
+    private final int overlap;
+    private final int hashCache;
 
-    NodePrototype(Token... tokens) {
-        this.tokens.addAll(Arrays.asList(tokens));
-    }
-
-    List<Token> getTokens() {
-        return tokens;
+    Chain(Deque<Node> deque, int overlap) {
+        this.nodes = new ArrayList<>(deque);
+        this.overlap = overlap;
+        this.hashCache = Objects.hash(nodes, overlap);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof NodePrototype)) {
-            return false;
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        int startIndex = 0;
+        for (Node node : nodes) {
+            node.writeTokens(builder, startIndex);
+            startIndex = overlap;
         }
-        NodePrototype other = (NodePrototype) obj;
-        return this.tokens.equals(other.tokens);
+        return builder.toString().trim();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Chain chain = (Chain) o;
+        return overlap == chain.overlap && nodes.equals(chain.nodes);
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 23 * hash + this.tokens.hashCode();
-        return hash;
+        return hashCache;
     }
 }

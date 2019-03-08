@@ -21,51 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe1;
+package com.gikk.jobe;
 
-/**
- *
- * @author Gikkman
- */
+import java.util.Objects;
+
 class Edge {
-    private int leftNodeID = -1;
-    private int rightNodeID = -1;
+    private final Node leftNode;
+    private final Node rightNode;
 
-    void setLeftNodeID(int id) {
-        this.leftNodeID = id;
-    }
-
-    void setRightNodeID(int id) {
-        this.rightNodeID = id;
+    Edge(Node left, Node right) {
+        this.leftNode = left;
+        this.rightNode = right;
     }
 
     boolean isLeftmost() {
-        return this.leftNodeID < 0;
+        return this.leftNode.equals(Node.EMPTY);
     }
 
     boolean isRightmost() {
-        return this.rightNodeID < 0;
+        return this.rightNode.equals(Node.EMPTY);
     }
 
-    int getRightNodeID() {
-        return rightNodeID;
+    Node getRightNode() {
+        return rightNode;
     }
 
-    int getLeftNodeID() {
-        return leftNodeID;
+    Node getLeftNode() {
+        return leftNode;
     }
 
     @Override
     public String toString() {
-        return "[" + leftNodeID + "->" + rightNodeID + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + this.leftNodeID;
-        hash = 59 * hash + this.rightNodeID;
-        return hash;
+        return "[" + leftNode.getNodeID() + "->" + rightNode.getNodeID() + "]";
     }
 
     @Override
@@ -80,12 +67,20 @@ class Edge {
             return false;
         }
         final Edge other = (Edge) obj;
-        if (this.leftNodeID != other.leftNodeID) {
+        if (!Objects.equals(this.leftNode, other.leftNode)) {
             return false;
         }
-        if (this.rightNodeID != other.rightNodeID) {
+        if (!Objects.equals(this.rightNode, other.rightNode)) {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.leftNode);
+        hash = 97 * hash + Objects.hashCode(this.rightNode);
+        return hash;
     }
 }

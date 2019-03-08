@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -53,7 +53,8 @@ public class JobeImplIntegrationTest {
             try {
                 results.add(jobe.produce("test me"));
                 results.add(jobe.produce("gikkman"));
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
@@ -63,7 +64,7 @@ public class JobeImplIntegrationTest {
 
         System.out.println("\nNodes:");
         jobe.brain.nodeMap.values().stream().sorted(Comparator.comparingInt(Node::getNodeID))
-                .forEach(n -> System.out.println(n.toString()));
+                          .forEach(n -> System.out.println(n.toString()));
 
         System.out.println("\nTokens:");
         for (Map.Entry<Token, RandomAccessSet<Node>> e : jobe.brain.tokenNodeMap.entrySet()) {
@@ -76,7 +77,7 @@ public class JobeImplIntegrationTest {
         System.out.println("\nEdges LEFT:");
         for (Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.brain.leftwards.entrySet()) {
             String val = e.getValue().stream().sorted(Comparator.comparing(Edge::getLeftNode)).map(Edge::toString)
-                    .collect(Collectors.joining(","));
+                          .collect(Collectors.joining(","));
             String key = String.format("Key: %-4s ", e.getKey());
             String value = "Val: " + val;
             System.out.println(key + value);
@@ -85,7 +86,7 @@ public class JobeImplIntegrationTest {
         System.out.println("\nEdges RIGHT:");
         for (Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.brain.rightwards.entrySet()) {
             String val = e.getValue().stream().sorted(Comparator.comparing(Edge::getRightNode)).map(Edge::toString)
-                    .collect(Collectors.joining(","));
+                          .collect(Collectors.joining(","));
             String key = String.format("Key: %-4s ", e.getKey());
             String value = "Val: " + val;
             System.out.println(key + value);

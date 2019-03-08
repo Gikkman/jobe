@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
-public interface StringSplitter {
-    String[] split(String string);
-
-    static StringSplitter getDefault() {
-        return new StringSplitterDefault();
+public class StringSplitterDefault implements StringSplitter {
+    @Override
+    public String[] split(String string) {
+        return string.split("\\s");
     }
 }

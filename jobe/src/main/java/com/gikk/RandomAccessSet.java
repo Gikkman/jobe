@@ -133,7 +133,8 @@ public class RandomAccessSet<E> extends AbstractSet<E> {
                 RandomAccessSet.this.idx.remove(elem);
                 cursor = lastRet;
                 lastRet = -1;
-            } catch (IndexOutOfBoundsException ex) {
+            }
+            catch (IndexOutOfBoundsException ex) {
                 throw new ConcurrentModificationException();
             }
         }

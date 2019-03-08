@@ -21,66 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-class Edge {
-    private final Node leftNode;
-    private final Node rightNode;
+class NodePrototype {
+    private final List<Token> tokens = new ArrayList<>();
 
-    Edge(Node left, Node right) {
-        this.leftNode = left;
-        this.rightNode = right;
+    NodePrototype(Token... tokens) {
+        this.tokens.addAll(Arrays.asList(tokens));
     }
 
-    boolean isLeftmost() {
-        return this.leftNode.equals(Node.EMPTY);
-    }
-
-    boolean isRightmost() {
-        return this.rightNode.equals(Node.EMPTY);
-    }
-
-    Node getRightNode() {
-        return rightNode;
-    }
-
-    Node getLeftNode() {
-        return leftNode;
-    }
-
-    @Override
-    public String toString() {
-        return "[" + leftNode.getNodeID() + "->" + rightNode.getNodeID() + "]";
+    List<Token> getTokens() {
+        return tokens;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+        if (!(obj instanceof NodePrototype)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Edge other = (Edge) obj;
-        if (!Objects.equals(this.leftNode, other.leftNode)) {
-            return false;
-        }
-        if (!Objects.equals(this.rightNode, other.rightNode)) {
-            return false;
-        }
-        return true;
+        NodePrototype other = (NodePrototype) obj;
+        return this.tokens.equals(other.tokens);
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.leftNode);
-        hash = 97 * hash + Objects.hashCode(this.rightNode);
+        hash = 23 * hash + this.tokens.hashCode();
         return hash;
     }
 }

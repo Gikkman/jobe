@@ -21,48 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.Objects;
+public interface Jobe {
+    void consume(String input);
 
-class Chain {
-    private final List<Node> nodes;
-    private final int overlap;
-    private final int hashCache;
+    /**
+     * Produces one candidate string from the brain, and returns the value
+     *
+     * @param input
+     *            the string to sample for tokens
+     * @return the produced string
+     */
+    String produce(String input);
 
-    Chain(Deque<Node> deque, int overlap) {
-        this.nodes = new ArrayList<>(deque);
-        this.overlap = overlap;
-        this.hashCache = Objects.hash(nodes, overlap);
-    }
+    /**
+     * Consumes the input string, then produces a single candidate string from the brain, and returns the value
+     * 
+     * @param input
+     *            the string to consume into the brain, and to use to sample for tokens
+     * @return the produced string
+     */
+    String consumeThenProduce(String input);
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        int startIndex = 0;
-        for (Node node : nodes) {
-            node.writeTokens(builder, startIndex);
-            startIndex = overlap;
-        }
-        return builder.toString().trim();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Chain chain = (Chain) o;
-        return overlap == chain.overlap && nodes.equals(chain.nodes);
-    }
-
-    @Override
-    public int hashCode() {
-        return hashCache;
+    /**
+     * Returns a Jobe instance
+     * 
+     * @return an instance
+     */
+    public static Jobe getDefault() {
+        return new JobeImpl(3, 2);
     }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -49,7 +49,7 @@ public class ChainTest {
         Chain short3DiffLength = TestUtil.createChain(2, helloLore);
         assertNotEquals("Different length, equal nodes evaluated as different", short3, short3DiffLength);
         assertNotEquals("Different length, equal nodes had same hash code", short3.hashCode(),
-                short3DiffLength.hashCode());
+                        short3DiffLength.hashCode());
 
         Node worldOne = TestUtil.createNode("world", "!");
         Chain long1 = TestUtil.createChain(1, helloWorld, worldOne);

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
 import static org.junit.Assert.*;
 
@@ -106,4 +106,31 @@ public class BrainTest {
         assertEquals("Brain didn't map {'hello'} and {'world'} to {'hello','world'}", 2, brain.tokenNodeMap.size());
         assertEquals("Brain didn't set initial weight to 1 for {'hello','world'}", 1, node1.getWeight());
     }
+
+    @Test
+    public void testRegisterRightward() {
+        Random rng = new Random();
+        Node n1 = TestUtil.createNode("hello", "world");
+        Node n2 = TestUtil.createNode("world", "!");
+
+        Brain brain = new Brain();
+        brain.registerRightwardRelation(n1, n2);
+
+        Node received = brain.getNodeRightOf(n1, rng);
+        assertEquals("Wrong rightwards node", n2, received);
+    }
+
+    @Test
+    public void testRegisterLeftward() {
+        Random rng = new Random();
+        Node n1 = TestUtil.createNode("hello", "world");
+        Node n2 = TestUtil.createNode("world", "!");
+
+        Brain brain = new Brain();
+        brain.registerLeftwardRelation(n1, n2);
+
+        Node received = brain.getNodeLeftOf(n1, rng);
+        assertEquals("Wrong leftward node", n2, received);
+    }
+
 }

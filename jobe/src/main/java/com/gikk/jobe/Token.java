@@ -21,11 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
-public class StringSplitterDefault implements StringSplitter {
+import java.util.Objects;
+
+class Token {
+    private final String string;
+    private final int hashCache;
+    private int points = 0;
+
+    Token(String string) {
+        this.string = string;
+        this.hashCache = Objects.hash(string);
+    }
+
+    void incrementWeight() {
+        this.points++;
+    }
+
+    int getWeight() {
+        return this.points;
+    }
+
+    public String getString() {
+        return this.string;
+    }
+
     @Override
-    public String[] split(String string) {
-        return string.split("\\s");
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Token token = (Token) o;
+        if (this.hashCache != token.hashCache)
+            return false;
+        return Objects.equals(this.string, token.string);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.hashCache;
+    }
+
+    @Override
+    public String toString() {
+        return this.string;
     }
 }

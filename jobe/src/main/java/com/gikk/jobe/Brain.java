@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.gikk.jobe2;
+package com.gikk.jobe;
 
 import com.gikk.RandomAccessSet;
 import java.util.ArrayDeque;
@@ -119,10 +119,6 @@ class Brain {
         return rightwards.get(node).getRandom(rng).getRightNode();
     }
 
-    Node getRandomNodeFromToken(Token token, Random rng) {
-        return tokenNodeMap.get(token).getRandom(rng);
-    }
-
     Chain generate(Token originToken, Random rng) {
         if (originToken == null)
             return new Chain(new ArrayDeque<>(), nodeOverlap);
@@ -173,7 +169,8 @@ class Brain {
             NodePrototype proto = new NodePrototype(nextTokens);
             Node node = registerNode(proto);
             nodes.add(node);
-        } else {
+        }
+        else {
             nextTokenPos = 1;
         }
 
@@ -211,5 +208,9 @@ class Brain {
             previousNode = currentNode;
             currentNode = nextNode;
         }
+    }
+
+    Node getRandomNodeFromToken(Token token, Random rng) {
+        return tokenNodeMap.get(token).getRandom(rng);
     }
 }

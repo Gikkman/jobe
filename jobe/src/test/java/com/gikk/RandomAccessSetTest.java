@@ -86,7 +86,8 @@ public class RandomAccessSetTest {
             int next;
             do {
                 next = nextInt();
-            } while (next > bound);
+            }
+            while (next > bound);
             return next;
         }
     }
