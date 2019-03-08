@@ -43,11 +43,11 @@ public class Node implements Comparable<Node> {
     }
 
     boolean isLeftmost() {
-        return tokens.get(0).equals(Brain.START_OF_CHAIN);
+        return tokens.get(0).equals(TokenStop.START_OF_CHAIN);
     }
 
     boolean isRightmost() {
-        return tokens.get(tokens.size() - 1).equals(Brain.END_OF_CHAIN);
+        return tokens.get(tokens.size() - 1).equals(TokenStop.END_OF_CHAIN);
     }
 
     List<Token> getTokens() {
@@ -93,7 +93,7 @@ public class Node implements Comparable<Node> {
             return false;
         }
         final Node other = (Node) obj;
-        return this.tokens.equals(other.tokens);
+        return this.id == other.id && this.tokens.equals(other.tokens);
     }
 
     @Override

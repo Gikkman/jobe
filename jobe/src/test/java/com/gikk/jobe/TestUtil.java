@@ -31,11 +31,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class TestUtil {
-    private static final AtomicInteger NODE_ID = new AtomicInteger(1);
-    private static final Map<String, Token> TOKEN_MAP = new HashMap<>();
-    private static final Map<NodePrototype, Node> NODE_MAP = new HashMap<>();
+    private final AtomicInteger NODE_ID = new AtomicInteger(1);
+    private final Map<String, Token> TOKEN_MAP = new HashMap<>();
+    private final Map<NodePrototype, Node> NODE_MAP = new HashMap<>();
 
-    static Token createToken(String word) {
+    Token createToken(String word) {
         if (!TOKEN_MAP.containsKey(word)) {
             Token token = new Token(word);
             TOKEN_MAP.put(word, token);
@@ -43,11 +43,11 @@ class TestUtil {
         return TOKEN_MAP.get(word);
     }
 
-    static NodePrototype createNodePrototype(String... words) {
-        return new NodePrototype(Arrays.stream(words).map(TestUtil::createToken).toArray(Token[]::new));
+    NodePrototype createNodePrototype(String... words) {
+        return new NodePrototype(Arrays.stream(words).map(this::createToken).toArray(Token[]::new));
     }
 
-    static Node createNode(String... words) {
+    Node createNode(String... words) {
         NodePrototype prototype = createNodePrototype(words);
         if (NODE_MAP.containsKey(prototype))
             return NODE_MAP.get(prototype);
@@ -58,7 +58,7 @@ class TestUtil {
         }
     }
 
-    static Chain createChain(int overlap, Node... nodes) {
+    Chain createChain(int overlap, Node... nodes) {
         Deque<Node> deque = new ArrayDeque<>(Arrays.asList(nodes));
         return new Chain(deque, overlap);
     }

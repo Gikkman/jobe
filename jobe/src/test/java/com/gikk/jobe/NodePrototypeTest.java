@@ -23,37 +23,4 @@
  */
 package com.gikk.jobe;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-class NodePrototype {
-    private final List<Token> tokens = new ArrayList<>();
-
-    NodePrototype(Token... tokens) {
-        this.tokens.addAll(Arrays.asList(tokens));
-    }
-
-    List<Token> getTokens() {
-        return tokens;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() == obj.getClass())
-            return false;
-        NodePrototype other = (NodePrototype) obj;
-        return this.tokens.equals(other.tokens);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 23 * hash + this.tokens.hashCode();
-        return hash;
-    }
-}
+public class NodePrototypeTest {}

@@ -34,9 +34,6 @@ import java.util.Map;
 import java.util.Random;
 
 class Brain {
-    static final Token START_OF_CHAIN = new TokenStop("\\s");
-    static final Token END_OF_CHAIN = new TokenStop("\\e");
-
     final Map<String, Token> stringTokenMap = new HashMap<>();
     final Map<Token, RandomAccessSet<Node>> tokenNodeMap = new HashMap<>();
 
@@ -144,7 +141,7 @@ class Brain {
     void learn(Token[] tokens) {
         // Array for representing node segments
         Token[] nextTokens = new Token[nodeLength];
-        nextTokens[0] = START_OF_CHAIN;
+        nextTokens[0] = TokenStop.START_OF_CHAIN;
 
         /*
          * The idea is to construct several token series, where each series is equal to the previous one shifted a
@@ -188,7 +185,7 @@ class Brain {
             }
         }
 
-        nextTokens[nextTokenPos] = END_OF_CHAIN;
+        nextTokens[nextTokenPos] = TokenStop.END_OF_CHAIN;
         NodePrototype proto = new NodePrototype(nextTokens);
         Node node = registerNode(proto);
         nodes.add(node);
@@ -210,7 +207,7 @@ class Brain {
         }
     }
 
-    Node getRandomNodeFromToken(Token token, Random rng) {
+    private Node getRandomNodeFromToken(Token token, Random rng) {
         return tokenNodeMap.get(token).getRandom(rng);
     }
 }

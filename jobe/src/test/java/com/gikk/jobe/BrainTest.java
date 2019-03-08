@@ -99,7 +99,7 @@ public class BrainTest {
 
     @Test
     public void testRegisterNode() {
-        NodePrototype n1 = TestUtil.createNodePrototype("hello", "world");
+        NodePrototype n1 = new TestUtil().createNodePrototype("hello", "world");
         Brain brain = new Brain();
         Node node1 = brain.registerNode(n1);
         assertEquals("Brain didn't register a node for {'hello','world'}", 1, brain.nodeMap.size());
@@ -109,9 +109,10 @@ public class BrainTest {
 
     @Test
     public void testRegisterRightward() {
+        TestUtil testUtil = new TestUtil();
         Random rng = new Random();
-        Node n1 = TestUtil.createNode("hello", "world");
-        Node n2 = TestUtil.createNode("world", "!");
+        Node n1 = testUtil.createNode("hello", "world");
+        Node n2 = testUtil.createNode("world", "!");
 
         Brain brain = new Brain();
         brain.registerRightwardRelation(n1, n2);
@@ -122,9 +123,10 @@ public class BrainTest {
 
     @Test
     public void testRegisterLeftward() {
+        TestUtil testUtil = new TestUtil();
         Random rng = new Random();
-        Node n1 = TestUtil.createNode("hello", "world");
-        Node n2 = TestUtil.createNode("world", "!");
+        Node n1 = testUtil.createNode("hello", "world");
+        Node n2 = testUtil.createNode("world", "!");
 
         Brain brain = new Brain();
         brain.registerLeftwardRelation(n1, n2);

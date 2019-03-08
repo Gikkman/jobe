@@ -23,38 +23,35 @@
  */
 package com.gikk.jobe;
 
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 
-public class JobeImplTest {
+public class TokenTest {
     @Test
-    public void testConsumeThenProduce() {
-        JobeImpl jobe = new JobeImpl(3, 2);
-        String output = jobe.consumeThenProduce("this is a test");
-        assertFalse("Jobe produced nothing, after consuming", output.isEmpty());
+    public void testWeight() {
+        Token t1 = new Token("hello");
+        assertEquals(0, t1.getWeight());
+        t1.incrementWeight();
+        assertEquals(1, t1.getWeight());
+        t1.incrementWeight();
+        assertEquals(2, t1.getWeight());
     }
 
     @Test
-    public void testConsumeThenProduceManually() {
-        JobeImpl jobe = new JobeImpl(3, 2);
-        jobe.consume("this is a test");
-        String output = jobe.produce("test");
-        assertFalse("Jobe produced nothing, when getting known input", output.isEmpty());
+    public void testToString() {
+        Token t1 = new Token("hello");
+        assertEquals("hello", t1.toString());
     }
 
     @Test
-    public void testConsumeThenProduceFromUnknown() {
-        JobeImpl jobe = new JobeImpl(3, 2);
-        jobe.consume("this is a test");
-        String output = jobe.produce("jobe");
-        assertFalse("Jobe produced nothing, when getting unknown input", output.isEmpty());
-    }
-
-    @Test
-    public void testProduceWhenNothingLearned() {
-        JobeImpl jobe = new JobeImpl(3, 2);
-        String output = jobe.produce("jobe");
-        assertTrue("Jobe produced something when nothing was learned", output.isEmpty());
+    public void testEquals() {
+        Token t1 = new Token("hello");
+        Token t2 = new Token("hello");
+        Token t3 = new Token("world");
+        assertEquals("same token didn't evalutate to equal", t1, t1);
+        assertEquals("equal token didn't evalutate to equal", t1, t2);
+        assertNotEquals("different token didn't evalutate to equal", t1, t3);
     }
 }

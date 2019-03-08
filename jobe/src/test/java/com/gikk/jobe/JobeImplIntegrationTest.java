@@ -37,7 +37,6 @@ import com.gikk.RandomAccessSet;
 
 public class JobeImplIntegrationTest {
     @Test
-    @Ignore
     public void testSync() {
         Set<String> results = new HashSet<>();
 

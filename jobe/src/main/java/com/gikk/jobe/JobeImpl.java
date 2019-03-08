@@ -27,13 +27,25 @@ import java.util.Random;
 
 class JobeImpl implements Jobe {
     private final StringSplitter tokenizer = StringSplitter.getDefault();
-    private final int nodeLength;
-    private final int nodeOverlap;
     final Brain brain;
 
-    JobeImpl(int nodeLength, int nodeOverlap) {
-        this.nodeLength = nodeLength;
-        this.nodeOverlap = nodeOverlap;
+    /**
+     * Creates a new JobeImpl instance.
+     *
+     * @param nodeLength
+     *            the lenght of the chain segments (i.e. how many words)
+     * @param nodeOverlap
+     *            the overlap between adjacent chain segments
+     * @throws IllegalArgumentException
+     *             if nodeLenght < 1 or nodeOverlap < -1 or nodeLenght <= nodeOverlap
+     */
+    JobeImpl(int nodeLength, int nodeOverlap) throws IllegalArgumentException {
+        if (nodeLength < 1)
+            throw new IllegalArgumentException("NodeLength has to be greater than 0");
+        if (nodeOverlap < 0)
+            throw new IllegalArgumentException("NodeOverlap has to be greater than -1");
+        if (nodeLength <= nodeOverlap)
+            throw new IllegalArgumentException("NodeLength has to be greater than NodeOverlap");
 
         this.brain = new Brain(nodeLength, nodeOverlap);
     }
@@ -46,10 +58,6 @@ class JobeImpl implements Jobe {
 
     @Override
     public void consume(String input) {
-        if (nodeLength <= nodeOverlap)
-            return;
-        if (nodeLength < 1)
-            return;
         String[] split = tokenizer.split(input);
         Token[] tokens = brain.registerTokens(split);
 

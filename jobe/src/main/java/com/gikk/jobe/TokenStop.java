@@ -26,9 +26,11 @@ package com.gikk.jobe;
 /**
  * Class for representing Tokens that acts as chain stops. I.e. the start-token and the end-token
  */
-public class TokenStop extends Token {
+class TokenStop extends Token {
+    static final Token START_OF_CHAIN = new TokenStop("\\s");
+    static final Token END_OF_CHAIN = new TokenStop("\\e");
 
-    public TokenStop(String string) {
+    private TokenStop(String string) {
         super(string);
     }
 

@@ -126,7 +126,7 @@ public class RandomAccessSet<E> extends AbstractSet<E> {
         @Override
         public void remove() {
             if (lastRet < 0) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("next() has to be called before remove()");
             }
             try {
                 E elem = RandomAccessSet.this.data.remove(lastRet);
