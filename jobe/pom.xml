@@ -65,6 +65,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <configFile>${project.basedir}/formatter.xml</configFile>
+                </configuration>
             </plugin>
             <plugin>  <!-- Compile java 8 compatible bytecode -->
                 <groupId>org.apache.maven.plugins</groupId>
