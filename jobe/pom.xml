@@ -91,7 +91,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Code Coverage report to Coverals -->
+            <!-- Code Coverage report to Coveralls -->
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
