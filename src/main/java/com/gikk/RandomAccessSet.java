@@ -89,18 +89,23 @@ public class RandomAccessSet<E> extends AbstractSet<E> {
      * @param index
      *            index of the element to remove
      */
-    private void removeAt(int index) {
+    void removeAt(int index) {
         if (index >= data.size()) {
             return;
         }
-        E res = data.get(index);
-        idx.remove(res);
+        try {
+            E res = data.get(index);
+            idx.remove(res);
 
-        // Skip filling the hole if last is removed
-        E last = data.remove(data.size() - 1);
-        if (index < data.size()) {
-            idx.put(last, index);
-            data.set(index, last);
+            // Skip filling the hole if last is removed
+            E last = data.remove(data.size() - 1);
+            if (index < data.size()) {
+                idx.put(last, index);
+                data.set(index, last);
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new ConcurrentModificationException();
         }
     }
 
@@ -128,15 +133,9 @@ public class RandomAccessSet<E> extends AbstractSet<E> {
             if (lastRet < 0) {
                 throw new IllegalStateException("next() has to be called before remove()");
             }
-            try {
-                E elem = RandomAccessSet.this.data.remove(lastRet);
-                RandomAccessSet.this.idx.remove(elem);
-                cursor = lastRet;
-                lastRet = -1;
-            }
-            catch (IndexOutOfBoundsException ex) {
-                throw new ConcurrentModificationException();
-            }
+            RandomAccessSet.this.removeAt(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
         }
     }
 }

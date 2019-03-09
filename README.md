@@ -9,4 +9,4 @@ A Markov chain based text generation library, inspired by COBE   https://github.
 ### Contribution
 Contribution is welcome, just send in a pull request. To make sure contributions follows the standards, please run the following maven goal before making a pull request:
 
-`mvn formatter:format license:format validate`
+`mvn formatter:format license:format validate test`

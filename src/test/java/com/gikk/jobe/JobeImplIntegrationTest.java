@@ -50,7 +50,7 @@ public class JobeImplIntegrationTest {
         for (int i = 0; i < 10000; i++) {
             try {
                 results.add(jobe.produce("test me"));
-                results.add(jobe.produce("gikkman"));
+                results.add(jobe.produce("gikkman made this test"));
             }
             catch (Exception ex) {
                 ex.printStackTrace();
@@ -74,8 +74,8 @@ public class JobeImplIntegrationTest {
 
         System.out.println("\nEdges LEFT:");
         for (Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.brain.leftwards.entrySet()) {
-            String val = e.getValue().stream().sorted(Comparator.comparing(Edge::getLeftNode)).map(Edge::toString)
-                          .collect(Collectors.joining(","));
+            String val = e.getValue().stream().sorted(Comparator.comparing(edge -> edge.getLeftNode().getNodeID()))
+                          .map(Edge::toString).collect(Collectors.joining(","));
             String key = String.format("Key: %-4s ", e.getKey());
             String value = "Val: " + val;
             System.out.println(key + value);
@@ -83,8 +83,8 @@ public class JobeImplIntegrationTest {
 
         System.out.println("\nEdges RIGHT:");
         for (Map.Entry<Node, RandomAccessSet<Edge>> e : jobe.brain.rightwards.entrySet()) {
-            String val = e.getValue().stream().sorted(Comparator.comparing(Edge::getRightNode)).map(Edge::toString)
-                          .collect(Collectors.joining(","));
+            String val = e.getValue().stream().sorted(Comparator.comparing(edge -> edge.getRightNode().getNodeID()))
+                          .map(Edge::toString).collect(Collectors.joining(","));
             String key = String.format("Key: %-4s ", e.getKey());
             String value = "Val: " + val;
             System.out.println(key + value);

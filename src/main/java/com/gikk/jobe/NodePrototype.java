@@ -26,6 +26,7 @@ package com.gikk.jobe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class NodePrototype {
     private final List<Token> tokens = new ArrayList<>();
@@ -44,7 +45,7 @@ class NodePrototype {
             return true;
         if (obj == null)
             return false;
-        if (getClass() == obj.getClass())
+        if (getClass() != obj.getClass())
             return false;
         NodePrototype other = (NodePrototype) obj;
         return this.tokens.equals(other.tokens);
@@ -55,5 +56,10 @@ class NodePrototype {
         int hash = 5;
         hash = 23 * hash + this.tokens.hashCode();
         return hash;
+    }
+
+    @Override
+    public String toString() {
+        return tokens.stream().map(Token::toString).collect(Collectors.joining("-", "[", "]"));
     }
 }

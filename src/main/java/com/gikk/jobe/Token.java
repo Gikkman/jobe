@@ -51,7 +51,9 @@ class Token {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (o == null)
+            return false;
+        if (getClass() != o.getClass())
             return false;
         Token token = (Token) o;
         if (this.hashCache != token.hashCache)

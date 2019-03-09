@@ -25,6 +25,7 @@ package com.gikk.jobe;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
+
 import org.junit.Test;
 
 public class JobeTest {
@@ -39,7 +40,8 @@ public class JobeTest {
     public void testConsumeThenProduceManually() {
         Jobe jobe = new JobeImpl(3, 2);
         jobe.consume("this is a test");
-        String output = jobe.produce("test");
+        jobe.consume("this is another test");
+        String output = jobe.produce("test another");
         assertFalse("Jobe produced nothing, when getting known input", output.isEmpty());
     }
 

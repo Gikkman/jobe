@@ -28,10 +28,12 @@ import java.util.Objects;
 class Edge {
     private final Node leftNode;
     private final Node rightNode;
+    private final int hashCache;
 
     Edge(Node left, Node right) {
         this.leftNode = left;
         this.rightNode = right;
+        this.hashCache = Objects.hash(left, right);
     }
 
     boolean isLeftmost() {
@@ -67,6 +69,9 @@ class Edge {
             return false;
         }
         final Edge other = (Edge) obj;
+        if (hashCache != other.hashCache) {
+            return false;
+        }
         if (!Objects.equals(this.leftNode, other.leftNode)) {
             return false;
         }
@@ -78,9 +83,6 @@ class Edge {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.leftNode);
-        hash = 97 * hash + Objects.hashCode(this.rightNode);
-        return hash;
+        return hashCache;
     }
 }

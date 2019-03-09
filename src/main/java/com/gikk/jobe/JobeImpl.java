@@ -78,13 +78,18 @@ class JobeImpl implements Jobe {
         /*
          * The token[] might contain null elements
          */
-        int currentLowestWeight = -1;
+        int currentLowestWeight = Integer.MAX_VALUE;
         Token currentWinningToken = null;
         for (Token token : tokens) {
             // Tokens with weight 1 has only been seen once, and might be a simple misspelling.
-            // Hence, we want a word to have at least occured twice
-            if (token != null && token.getWeight() > currentLowestWeight && token.getWeight() > 1) {
-                currentWinningToken = token;
+            // Hence, we want a word to have at least occurred twice
+            if (token != null) {
+                if (token.getWeight() > 1) {
+                    if (token.getWeight() < currentLowestWeight) {
+                        currentWinningToken = token;
+                        currentLowestWeight = token.getWeight();
+                    }
+                }
             }
         }
         if (currentWinningToken == null) {

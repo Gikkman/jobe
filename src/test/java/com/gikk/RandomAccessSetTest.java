@@ -40,48 +40,67 @@ import org.junit.Test;
 public class RandomAccessSetTest {
     @Test
     public void testAdd() {
-        RandomAccessSet<Integer> set = new RandomAccessSet<>();
+        RandomAccessSet<String> set = new RandomAccessSet<>();
 
-        assertTrue("Adding unique returned wrong status", set.add(1));
+        assertTrue("Adding unique returned wrong status", set.add("hello"));
         assertEquals("RandoAccessSet.size() missmatch", 1, set.size());
 
-        assertFalse("Adding duplicate returned wrong status", set.add(1));
+        assertFalse("Adding duplicate returned wrong status", set.add("hello"));
         assertEquals("RandoAccessSet.size() missmatch", 1, set.size());
 
-        assertTrue("Adding unique returned wrong status", set.add(2));
+        assertTrue("Adding unique returned wrong status", set.add("world"));
         assertEquals("RandoAccessSet.size() missmatch", 2, set.size());
     }
 
     @Test
     public void testRemove() {
-        Integer i1 = 1, i2 = 12453;
-        RandomAccessSet<Integer> set = new RandomAccessSet<>();
-        set.add(i1);
-        set.add(i2);
-        assertTrue("Removed existing element, but got false", set.remove(i1));
-        assertFalse("Removed non-existing element, but got true", set.remove(123));
-        assertTrue("Removed existing element, but got false", set.remove(i2));
+        String s1 = "hello", s2 = "world";
+        RandomAccessSet<String> set = new RandomAccessSet<>();
+        set.add(s1);
+        set.add(s2);
+        assertTrue("Removed existing element, but got false", set.remove(s1));
+        assertFalse("Removed non-existing element, but got true", set.remove("ipsum"));
+        assertTrue("Removed existing element, but got false", set.remove(s2));
+    }
+
+    @Test
+    public void testRemoveAt() {
+        RandomAccessSet<String> set = new RandomAccessSet<>();
+        set.add("hello");
+        set.add("world");
+        set.add("ipsum");
+
+        // First element should be "hello", since it was the first inserted
+        assertEquals("hello", set.get(0));
+        set.removeAt(0);
+
+        // After using removeAt(), the gap from the removed element is filled by the last element in the collection
+        // (i.e. "lore")
+        assertEquals("ipsum", set.get(0));
+
+        // Test that removing an element beyond the set's size does nothing
+        set.removeAt(2);
     }
 
     @Test(
         expected = NoSuchElementException.class)
     public void testIterator() {
-        Integer i1 = 1, i2 = 12453;
-        Set<Integer> allNumbers = Stream.of(i1, i2).collect(Collectors.toSet());
-        RandomAccessSet<Integer> set = new RandomAccessSet<>();
-        set.add(i1);
-        set.add(i2);
-        Iterator<Integer> itr = set.iterator();
+        String s1 = "lore", s2 = "ipsum";
+        Set<String> allString = Stream.of("lore", "ipsum").collect(Collectors.toSet());
+        RandomAccessSet<String> set = new RandomAccessSet<>();
+        set.add(s1);
+        set.add(s2);
+        Iterator<String> itr = set.iterator();
 
         assertTrue("itr with element returned false on hasNext", itr.hasNext());
-        assertTrue("element that should exist in set, didn't", allNumbers.remove(itr.next()));
+        assertTrue("element that should exist in set, didn't", allString.remove(itr.next()));
 
         int size = set.size();
         itr.remove();
         assertEquals("size did not shrink after itr.remove()", size - 1, set.size());
 
         assertTrue("itr didn't have a next, though it should", itr.hasNext());
-        assertTrue("element that should exist in set, didn't", allNumbers.remove(itr.next()));
+        assertTrue("element that should exist in set, didn't", allString.remove(itr.next()));
 
         assertFalse("itr shouldn't have next", itr.hasNext());
         itr.next();
@@ -89,11 +108,11 @@ public class RandomAccessSetTest {
 
     @Test
     public void testIteratorRemove() {
-        Integer i1 = 1, i2 = 12453, i3 = 999;
-        RandomAccessSet<Integer> set = new RandomAccessSet<>();
-        set.add(i1);
-        set.add(i2);
-        Iterator<Integer> itr = set.iterator();
+        String s1 = "hello", s2 = "small";
+        RandomAccessSet<String> set = new RandomAccessSet<>();
+        set.add(s1);
+        set.add(s2);
+        Iterator<String> itr = set.iterator();
 
         // You gotta call itr.next before remove
         try {
@@ -126,27 +145,27 @@ public class RandomAccessSetTest {
 
     @Test
     public void testGet() {
-        RandomAccessSet<Integer> set = new RandomAccessSet<>();
-        set.add(1);
-        set.add(2);
-        assertEquals("RandomAccessSet.get(index) missmatch", new Integer(1), set.get(0));
-        assertEquals("RandomAccessSet.get(index) missmatch", new Integer(2), set.get(1));
+        RandomAccessSet<String> set = new RandomAccessSet<>();
+        set.add("hello");
+        set.add("world");
+        assertEquals("RandomAccessSet.get(index) missmatch", "hello", set.get(0));
+        assertEquals("RandomAccessSet.get(index) missmatch", "world", set.get(1));
     }
 
     @Test
     public void testGetRandom() {
-        RandomAccessSet<Integer> set = new RandomAccessSet<>();
-        set.add(1);
-        set.add(2);
+        RandomAccessSet<String> set = new RandomAccessSet<>();
+        set.add("hello");
+        set.add("world");
 
         Random rng = new TestRandom(1, 0);
-        assertEquals("RandomAccessSet.getRandom(rng) missmatch", new Integer(2), set.getRandom(rng));
-        assertEquals("RandomAccessSet.getRandom(rng) missmatch", new Integer(1), set.getRandom(rng));
+        assertEquals("RandomAccessSet.getRandom(rng) missmatch", "world", set.getRandom(rng));
+        assertEquals("RandomAccessSet.getRandom(rng) missmatch", "hello", set.getRandom(rng));
     }
 
     @Test
     public void testGetRandomIfEmpty() {
-        RandomAccessSet<Integer> set = new RandomAccessSet<>();
+        RandomAccessSet<String> set = new RandomAccessSet<>();
         Random rng = new TestRandom(1, 0);
         assertNull("RandomAccessSet.getRandom(rng) should give null if empty", set.getRandom(rng));
     }

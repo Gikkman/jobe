@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Node implements Comparable<Node> {
+public class Node {
     static final Node EMPTY = new Node(new NodePrototype(), -1);
 
     private final List<Token> tokens;
@@ -94,10 +94,5 @@ public class Node implements Comparable<Node> {
         }
         final Node other = (Node) obj;
         return this.id == other.id && this.tokens.equals(other.tokens);
-    }
-
-    @Override
-    public int compareTo(Node o) {
-        return Integer.compare(this.id, o.id);
     }
 }

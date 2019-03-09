@@ -46,12 +46,20 @@ public class TokenTest {
     }
 
     @Test
-    public void testEquals() {
+    public void testEqualsAndHashCode() {
         Token t1 = new Token("hello");
         Token t2 = new Token("hello");
         Token t3 = new Token("world");
-        assertEquals("same token didn't evalutate to equal", t1, t1);
-        assertEquals("equal token didn't evalutate to equal", t1, t2);
-        assertNotEquals("different token didn't evalutate to equal", t1, t3);
+        assertEquals("same token didn't evaluated to equal", t1, t1);
+        assertEquals("equal token didn't evaluated to equal", t1, t2);
+        assertNotEquals("different token evaluated to equal", t1, t3);
+
+        assertEquals("same token didn't have equal hash code", t1.hashCode(), t1.hashCode());
+        assertEquals("equal token didn't have equal hash code", t1.hashCode(), t2.hashCode());
+        assertNotEquals("different token had equal hash code", t1.hashCode(), t3.hashCode());
+
+        assertNotEquals("token equaled null", t1, null);
+        assertNotEquals("token equaled other object", TokenStop.START_OF_CHAIN);
+        assertNotEquals("token equaled other object", TokenStop.END_OF_CHAIN);
     }
 }
